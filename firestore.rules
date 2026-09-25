@@ -1,0 +1,20 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // User data subcollections
+    match /users/{uid}/{document=**} {
+      allow read, write: if true;
+    }
+    
+    // Public proposals viewable by token
+    match /publicProposals/{token} {
+      allow read, write: if true;
+    }
+
+    // Secure OAuth tokens readable only server-side
+    match /secure_connections/{doc} {
+      allow read, write: if false;
+    }
+  }
+}
+

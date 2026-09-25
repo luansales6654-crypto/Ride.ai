@@ -1,0 +1,6 @@
+{
+  "name": "RIDE.IA",
+  "description": "Plataforma SaaS de venda de sites + prospecção de empresas + propostas + e-commerce/marketplace com catálogo de 1.000 produtos",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
