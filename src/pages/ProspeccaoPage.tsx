@@ -88,8 +88,8 @@ export const ProspeccaoPage: React.FC = () => {
   // Load existing saved leads to prevent duplicates
   useEffect(() => {
     const user = auth.currentUser;
-    const uid = user ? user.uid : 'ride-demo-user';
-    const leadsRef = collection(db, 'users', uid, 'leads');
+    if (!user) return;
+    const leadsRef = collection(db, 'users', user.uid, 'leads');
     getDocs(leadsRef).then((snap) => {
       const ids = new Set<string>();
       snap.forEach((doc) => {
@@ -142,7 +142,8 @@ export const ProspeccaoPage: React.FC = () => {
 
   const handleSaveLead = async (place: CompanyPlace) => {
     const user = auth.currentUser;
-    const uid = user ? user.uid : 'ride-demo-user';
+    if (!user) return;
+    const uid = user.uid;
 
     if (savedPlaceIds.has(place.placeId)) {
       showToast({ type: 'info', title: 'Empresa já salva nos seus leads!' });

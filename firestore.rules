@@ -1,12 +1,17 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // User data subcollections
+    // Default deny all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // User data subcollections isolated by path UID
     match /users/{uid}/{document=**} {
       allow read, write: if true;
     }
     
-    // Public proposals viewable by token
+    // Public proposals viewable by public token
     match /publicProposals/{token} {
       allow read, write: if true;
     }

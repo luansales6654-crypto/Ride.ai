@@ -56,7 +56,8 @@ export const LeadsPage: React.FC = () => {
 
   useEffect(() => {
     const user = auth.currentUser;
-    const uid = user ? user.uid : 'ride-demo-user';
+    if (!user) return;
+    const uid = user.uid;
 
     const leadsRef = collection(db, 'users', uid, 'leads');
     const q = query(leadsRef, orderBy('createdAt', 'desc'));
@@ -84,7 +85,8 @@ export const LeadsPage: React.FC = () => {
 
   const handleUpdateStatus = async (leadId: string, newStatus: LeadStatus) => {
     const user = auth.currentUser;
-    const uid = user ? user.uid : 'ride-demo-user';
+    if (!user) return;
+    const uid = user.uid;
 
     try {
       const leadRef = doc(db, 'users', uid, 'leads', leadId);
@@ -120,7 +122,8 @@ export const LeadsPage: React.FC = () => {
 
   const handleToggleFavorite = async (lead: Lead) => {
     const user = auth.currentUser;
-    const uid = user ? user.uid : 'ride-demo-user';
+    if (!user) return;
+    const uid = user.uid;
 
     try {
       const leadRef = doc(db, 'users', uid, 'leads', lead.id);

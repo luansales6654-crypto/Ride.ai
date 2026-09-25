@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Navigate } from 'react-router-dom';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { doc, getDoc, onSnapshot, collection, query, where } from 'firebase/firestore';
+import { doc, getDoc, setDoc, onSnapshot, collection, query, where } from 'firebase/firestore';
 import { auth, db } from '../../database/firebase';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
@@ -10,54 +10,58 @@ import { UserProfile } from '../../types';
 import { LoadingState } from '../ui/LoadingState';
 import { initButtonColor, applyButtonColor } from '../../utils/theme';
 
-const DEFAULT_DEMO_USER: any = {
-  uid: 'ride-demo-user',
-  email: 'agencia@ride.ia',
-  displayName: 'Agência RIDE.IA',
-  emailVerified: true,
-};
-
-const DEFAULT_DEMO_PROFILE: UserProfile = {
-  uid: 'ride-demo-user',
-  name: 'Agência RIDE.IA',
-  email: 'agencia@ride.ia',
-  agencyName: 'Agência RIDE.IA',
-  whatsapp: '5511999999999',
-  role: 'super_admin',
-  createdAt: new Date().toISOString(),
-};
-
 export const AppLayout: React.FC = () => {
-  const [currentUser, setCurrentUser] = useState<User | null>(DEFAULT_DEMO_USER);
-  const [profile, setProfile] = useState<UserProfile | null>(DEFAULT_DEMO_PROFILE);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [unreadNotifications, setUnreadNotifications] = useState<number>(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     initButtonColor();
 
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
       if (!user) {
-        // Bypass login: keep default active user
-        setCurrentUser(DEFAULT_DEMO_USER as User);
-        setProfile(DEFAULT_DEMO_PROFILE);
-        setLoading(false);
+        const storedCustom = localStorage.getItem('ride_custom_session');
+        if (storedCustom) {
+          try {
+            const parsed = JSON.parse(storedCustom);
+            if (parsed && parsed.uid) {
+              const activeUserObj: any = {
+                uid: parsed.uid,
+                email: parsed.email || 'usuario@ride.ia',
+                displayName: parsed.name || 'Agência Digital',
+              };
+              const activeProfileObj: UserProfile = {
+                uid: parsed.uid,
+                name: parsed.name || 'Agência Digital',
+                email: parsed.email || 'usuario@ride.ia',
+                agencyName: parsed.name || 'Agência Digital',
+                role: 'user',
+                createdAt: parsed.createdAt || new Date().toISOString(),
+              };
 
-        try {
-          const notifRef = collection(db, 'users', DEFAULT_DEMO_USER.uid, 'notifications');
-          const q = query(notifRef, where('read', '==', false));
-          const unsubNotif = onSnapshot(q, (snapshot) => {
-            setUnreadNotifications(snapshot.size);
-          }, (err) => {
-            // Silently swallow listener error for demo mode
-          });
-          return () => unsubNotif();
-        } catch (e) {
-          // ignore
+              setCurrentUser(activeUserObj);
+              setProfile(activeProfileObj);
+
+              const notifRef = collection(db, 'users', parsed.uid, 'notifications');
+              const q = query(notifRef, where('read', '==', false));
+              const unsubNotif = onSnapshot(q, (snapshot) => {
+                setUnreadNotifications(snapshot.size);
+              }, () => {});
+
+              setLoading(false);
+              return () => unsubNotif();
+            }
+          } catch (e) {
+            // ignore
+          }
         }
+
+        setCurrentUser(null);
+        setProfile(null);
+        setLoading(false);
         return;
       }
-
 
       setCurrentUser(user);
 
@@ -72,31 +76,28 @@ export const AppLayout: React.FC = () => {
             applyButtonColor(pData.buttonColor);
           }
         } else {
-          const defaultProfile: UserProfile = {
+          const newProfile: UserProfile = {
             uid: user.uid,
-            name: user.displayName || user.email?.split('@')[0] || 'Agência RIDE.IA',
-            email: user.email || 'agencia@ride.ia',
-            agencyName: 'Agência RIDE.IA',
-            role: 'super_admin',
+            name: user.displayName || user.email?.split('@')[0] || (user.isAnonymous ? 'Convidado RIDE.IA' : 'Usuário RIDE.IA'),
+            email: user.email || (user.isAnonymous ? 'convidado@ride.ia' : 'usuario@ride.ia'),
+            agencyName: user.displayName || 'Agência Digital',
+            role: 'user',
             createdAt: new Date().toISOString(),
           };
-          setProfile(defaultProfile);
+          await setDoc(userRef, newProfile).catch(() => {});
+          setProfile(newProfile);
         }
 
         const notifRef = collection(db, 'users', user.uid, 'notifications');
         const q = query(notifRef, where('read', '==', false));
         const unsubNotif = onSnapshot(q, (snapshot) => {
           setUnreadNotifications(snapshot.size);
-        }, (err) => {
-          console.warn('Erro ao escutar notificações:', err);
-        });
+        }, () => {});
 
         setLoading(false);
         return () => unsubNotif();
       } catch (err) {
         console.warn('Erro ao carregar dados do usuário:', err);
-        setCurrentUser(DEFAULT_DEMO_USER as User);
-        setProfile(DEFAULT_DEMO_PROFILE);
         setLoading(false);
       }
     });
@@ -107,29 +108,30 @@ export const AppLayout: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#000000] flex items-center justify-center p-4">
-        <LoadingState text="Iniciando plataforma RIDE.IA..." size="lg" />
+        <LoadingState text="Carregando seus dados privados RIDE.IA..." size="lg" />
       </div>
     );
   }
 
-  const activeUser = currentUser || (DEFAULT_DEMO_USER as User);
-  const activeProfile = profile || DEFAULT_DEMO_PROFILE;
+  if (!currentUser) {
+    return <Navigate to="/entrar" replace />;
+  }
 
   return (
     <div className="min-h-screen bg-[#000000] text-white flex flex-col md:flex-row antialiased">
       {/* Desktop Sidebar */}
-      <Sidebar role={activeProfile?.role || 'super_admin'} className="hidden md:flex" />
+      <Sidebar role={profile?.role || 'user'} className="hidden md:flex" />
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 pb-20 md:pb-6">
         <Topbar
-          userName={activeProfile?.agencyName || activeProfile?.name || 'Agência RIDE.IA'}
-          userEmail={activeUser?.email || 'agencia@ride.ia'}
+          userName={profile?.agencyName || profile?.name || currentUser.displayName || 'Usuário RIDE.IA'}
+          userEmail={currentUser.email || 'Sessão Privada'}
           unreadNotificationsCount={unreadNotifications}
         />
 
         <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
-          <Outlet context={{ currentUser: activeUser, profile: activeProfile }} />
+          <Outlet context={{ currentUser, profile }} />
         </main>
       </div>
 

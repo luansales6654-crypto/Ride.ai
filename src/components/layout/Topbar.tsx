@@ -43,8 +43,16 @@ export const Topbar: React.FC<TopbarProps> = ({
     return 'RIDE.IA';
   };
 
-  const handleResetSession = () => {
-    navigate('/app');
+  const handleLogout = async () => {
+    try {
+      localStorage.removeItem('ride_custom_session');
+      await signOut(auth);
+      navigate('/entrar');
+    } catch (error) {
+      console.error('Erro ao sair:', error);
+      localStorage.removeItem('ride_custom_session');
+      navigate('/entrar');
+    }
   };
 
 
@@ -105,11 +113,11 @@ export const Topbar: React.FC<TopbarProps> = ({
               </NavLink>
 
               <button
-                onClick={handleResetSession}
-                className="w-full text-left flex items-center gap-2.5 px-4 py-2 text-xs text-[#3D8BFF] hover:bg-[#1769FF]/10 transition-colors border-t border-[#26262B] mt-1 font-semibold"
+                onClick={handleLogout}
+                className="w-full text-left flex items-center gap-2.5 px-4 py-2 text-xs text-[#FF6B57] hover:bg-[#FF6B57]/10 transition-colors border-t border-[#26262B] mt-1 font-semibold"
               >
-                <Settings className="w-4 h-4" />
-                Painel Principal
+                <LogOut className="w-4 h-4" />
+                Sair da Conta
               </button>
             </div>
           )}

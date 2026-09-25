@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile, signInAnonymously } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../../database/firebase';
 import { Logo } from '../../components/ui/Logo';
@@ -78,25 +78,40 @@ export const RegisterPage: React.FC = () => {
       navigate('/onboarding');
     } catch (err: any) {
       console.error('Erro de cadastro:', err);
-      // If Firebase email/password auth is not enabled in Firebase Console (operation-not-allowed)
-      // or any other auth error, gracefully register user locally and grant direct access
-      if (err.code === 'auth/operation-not-allowed' || err.code === 'auth/admin-restricted-operation' || err.code) {
+      if (
+        err.code === 'auth/operation-not-allowed' ||
+        err.code === 'auth/admin-restricted-operation' ||
+        err.code === 'auth/configuration-not-found'
+      ) {
         try {
-          // Store agency profile in local storage as fallback
-          const fallbackProfile = {
-            uid: 'ride-demo-user',
-            name: name.trim() || 'Agência RIDE.IA',
+          const userCred = await signInAnonymously(auth);
+          const nowStr = new Date().toISOString();
+          await setDoc(doc(db, 'users', userCred.user.uid, 'profile', 'data'), {
+            uid: userCred.user.uid,
+            name: name.trim() || 'Nova Agência',
             email: email.trim() || 'agencia@ride.ia',
-            agencyName: name.trim() || 'Agência RIDE.IA',
-            role: 'super_admin',
-            createdAt: new Date().toISOString(),
+            role: 'user',
+            createdAt: nowStr,
+          });
+          navigate('/onboarding');
+          return;
+        } catch (anonErr) {
+          const customUid = 'usr_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+          const nowStr = new Date().toISOString();
+          const customSession = {
+            uid: customUid,
+            name: name.trim() || 'Nova Agência',
+            email: email.trim() || 'agencia@ride.ia',
+            role: 'user',
+            createdAt: nowStr,
           };
-          localStorage.setItem('ride_fallback_profile', JSON.stringify(fallbackProfile));
-        } catch (e) {
-          // ignore
+          localStorage.setItem('ride_custom_session', JSON.stringify(customSession));
+
+          await setDoc(doc(db, 'users', customUid, 'profile', 'data'), customSession).catch(() => {});
+
+          navigate('/onboarding');
+          return;
         }
-        navigate('/app');
-        return;
       }
 
       if (err.code === 'auth/email-already-in-use') {

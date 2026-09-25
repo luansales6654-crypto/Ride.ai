@@ -38,12 +38,12 @@ export default function App() {
     <ToastProvider>
       <BrowserRouter>
         <Routes>
-          {/* Entry & Public Routes -> Direct Access to /app */}
-          <Route path="/" element={<Navigate to="/app" replace />} />
-          <Route path="/entrar" element={<Navigate to="/app" replace />} />
-          <Route path="/cadastro" element={<Navigate to="/app" replace />} />
-          <Route path="/recuperar-senha" element={<Navigate to="/app" replace />} />
-          <Route path="/onboarding" element={<Navigate to="/app" replace />} />
+          {/* Public & Authentication Routes */}
+          <Route path="/" element={<Navigate to="/entrar" replace />} />
+          <Route path="/entrar" element={<LoginPage />} />
+          <Route path="/cadastro" element={<RegisterPage />} />
+          <Route path="/recuperar-senha" element={<ForgotPasswordPage />} />
+          <Route path="/onboarding" element={<OnboardingPage />} />
           <Route path="/termos" element={<TermosPage />} />
           <Route path="/privacidade" element={<PrivacidadePage />} />
           <Route path="/p/:token" element={<ProposalPublicPage />} />
