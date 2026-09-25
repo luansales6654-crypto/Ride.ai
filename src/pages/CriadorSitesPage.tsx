@@ -194,6 +194,20 @@ export const CriadorSitesPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* Informative Header Banner */}
+      <div className="card-surface p-5 rounded-2xl border border-[#3D8BFF]/30 bg-[#0D347A]/15 flex items-start gap-3">
+        <Sparkles className="w-5 h-5 text-[#3D8BFF] shrink-0 mt-0.5" />
+        <div className="space-y-1">
+          <h3 className="font-sora text-sm font-bold text-white">
+            Gerador de Prompt Mestre e Estrutura de Sites
+          </h3>
+          <p className="text-xs text-[#C9C9CF] leading-relaxed">
+            Responda o briefing rápido abaixo para a IA criar o <strong>Prompt Mestre completo (~2.000 palavras)</strong>,
+            com cópias de alta conversão, estrutura de seções, palavras-chave de SEO e código pronto para você colar no AI Studio ou usar onde preferir!
+          </p>
+        </div>
+      </div>
+
       {/* Navigation Tabs */}
       <div className="flex flex-wrap items-center gap-2 border-b border-[#26262B] pb-3">
         <button

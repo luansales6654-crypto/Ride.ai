@@ -24,6 +24,8 @@ import {
   MoreVertical,
   Wand2,
   Calendar,
+  MapPin,
+  ExternalLink,
 } from 'lucide-react';
 
 const STATUS_COLUMNS: { id: LeadStatus; label: string; color: string }[] = [
@@ -374,6 +376,37 @@ export const LeadsPage: React.FC = () => {
                     <option key={c.id} value={c.id}>{c.label}</option>
                   ))}
                 </select>
+              </div>
+            </div>
+
+            {/* Google Maps View Embed */}
+            <div className="p-4 bg-[#18181B] rounded-xl border border-[#26262B] space-y-2">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-[#8B8B95] font-semibold flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-[#4285F4]" /> Mapa da Empresa no Google Maps
+                </span>
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                    selectedLead.companyName + ' ' + selectedLead.city + ' ' + selectedLead.state + ' Brasil'
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#4285F4] hover:underline flex items-center gap-1 text-[11px]"
+                >
+                  Abrir no Google Maps <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
+              <div className="overflow-hidden rounded-xl border border-[#26262B] bg-[#0A0A0B] h-48 w-full">
+                <iframe
+                  title={`Google Map - ${selectedLead.companyName}`}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  src={`https://maps.google.com/maps?q=${encodeURIComponent(
+                    selectedLead.companyName + ', ' + selectedLead.city + ' ' + selectedLead.state + ' Brasil'
+                  )}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+                />
               </div>
             </div>
 

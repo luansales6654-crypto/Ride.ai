@@ -29,6 +29,8 @@ export const PropostasPage: React.FC = () => {
 
   // New proposal form fields
   const [companyName, setCompanyName] = useState('');
+  const [contactName, setContactName] = useState('');
+  const [contactPhone, setContactPhone] = useState('');
   const [category, setCategory] = useState('');
   const [city, setCity] = useState('');
   const [service, setService] = useState('Site Institucional Completo');
@@ -107,8 +109,8 @@ export const PropostasPage: React.FC = () => {
         deliveryDays,
         price,
         paymentConditions: aiData.paymentConditions || '50% de entrada e 50% na entrega',
-        contactName: 'Atendimento RIDE.IA',
-        contactPhone: '(11) 99999-9999',
+        contactName: contactName.trim() || companyName.trim(),
+        contactPhone: contactPhone.trim(),
         status: 'rascunho',
         theme: 'dark',
         version: 1,
@@ -134,6 +136,7 @@ export const PropostasPage: React.FC = () => {
           price: newProp.price,
           deliveryDays: newProp.deliveryDays,
           paymentConditions: newProp.paymentConditions,
+          contactName: newProp.contactName,
           contactPhone: newProp.contactPhone,
           createdAt: nowStr,
           viewsCount: 0,
@@ -196,10 +199,8 @@ export const PropostasPage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredProposals.map((prop) => {
             const publicUrl = `${window.location.origin}/p/${prop.publicToken}`;
-            const waRes = buildWhatsAppUrl(
-              prop.contactPhone,
-              `Olá! Preparei uma proposta comercial para ${prop.companyName}: ${publicUrl}`
-            );
+            const messageText = `Olá ${prop.contactName || prop.companyName}! Preparei a proposta comercial referente ao projeto para a ${prop.companyName}.\n\nVocê pode conferir a proposta completa e interativa pelo link:\n${publicUrl}\n\nFico à disposição no WhatsApp!`;
+            const waRes = buildWhatsAppUrl(prop.contactPhone || '', messageText);
 
             return (
               <div
@@ -208,7 +209,12 @@ export const PropostasPage: React.FC = () => {
               >
                 <div>
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <h3 className="font-sora font-bold text-sm text-white">{prop.companyName}</h3>
+                    <div>
+                      <h3 className="font-sora font-bold text-sm text-white">{prop.companyName}</h3>
+                      {prop.contactName && (
+                        <p className="text-[11px] text-[#8B8B95]">Contato: {prop.contactName}</p>
+                      )}
+                    </div>
                     <span
                       className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
                         prop.status === 'aceita'
@@ -233,22 +239,34 @@ export const PropostasPage: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="pt-2 flex flex-wrap gap-2 border-t border-[#26262B]">
-                  <button
-                    onClick={() => setSelectedProposal(prop)}
-                    className="btn-secondary h-8 px-3 text-[11px] flex-1"
+                <div className="pt-2 flex flex-col gap-2 border-t border-[#26262B]">
+                  <a
+                    href={waRes.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-2.5 px-3 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-black font-bold transition-all text-xs flex items-center justify-center gap-2 shadow-sm"
                   >
-                    <FileText className="w-3.5 h-3.5" /> Ver Proposta
-                  </button>
+                    <MessageSquare className="w-4 h-4" />
+                    Enviar Proposta no WhatsApp 📲
+                  </a>
 
-                  {prop.status !== 'aceita' && (
+                  <div className="flex items-center gap-2">
                     <button
-                      onClick={() => handleAcceptProposal(prop)}
-                      className="btn-ghost h-8 px-2 text-[11px] text-[#2FBF71]"
+                      onClick={() => setSelectedProposal(prop)}
+                      className="btn-secondary h-8 px-3 text-[11px] flex-1"
                     >
-                      Marcar Aceita
+                      <FileText className="w-3.5 h-3.5" /> Ver Proposta
                     </button>
-                  )}
+
+                    {prop.status !== 'aceita' && (
+                      <button
+                        onClick={() => handleAcceptProposal(prop)}
+                        className="btn-ghost h-8 px-2 text-[11px] text-[#2FBF71]"
+                      >
+                        Marcar Aceita
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             );
@@ -273,7 +291,7 @@ export const PropostasPage: React.FC = () => {
       >
         <form onSubmit={handleGenerateProposal} className="space-y-4 text-xs">
           <div>
-            <label className="block text-[#C9C9CF] font-medium mb-1">Nome da Empresa *</label>
+            <label className="block text-[#C9C9CF] font-medium mb-1">Nome da Empresa / Negócio *</label>
             <input
               type="text"
               required
@@ -282,6 +300,30 @@ export const PropostasPage: React.FC = () => {
               placeholder="Ex: Barbearia Silva"
               className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
             />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-[#C9C9CF] font-medium mb-1">Nome do Cliente / Responsável</label>
+              <input
+                type="text"
+                value={contactName}
+                onChange={(e) => setContactName(e.target.value)}
+                placeholder="Ex: Carlos Silva"
+                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[#C9C9CF] font-medium mb-1">WhatsApp / Telefone com DDD</label>
+              <input
+                type="text"
+                value={contactPhone}
+                onChange={(e) => setContactPhone(e.target.value)}
+                placeholder="Ex: (11) 98765-4321"
+                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -307,6 +349,7 @@ export const PropostasPage: React.FC = () => {
               />
             </div>
           </div>
+
 
           <div>
             <label className="block text-[#C9C9CF] font-medium mb-1">Serviço Oferecido</label>
@@ -430,9 +473,27 @@ export const PropostasPage: React.FC = () => {
 
             {/* Actions */}
             <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[#26262B]">
-              <button onClick={() => window.print()} className="btn-secondary">
-                <Printer className="w-4 h-4" /> Imprimir / Salvar PDF
-              </button>
+              <div className="flex items-center gap-2">
+                <button onClick={() => window.print()} className="btn-secondary">
+                  <Printer className="w-4 h-4" /> Imprimir / PDF
+                </button>
+
+                {(() => {
+                  const publicUrl = `${window.location.origin}/p/${selectedProposal.publicToken}`;
+                  const msgText = `Olá ${selectedProposal.contactName || selectedProposal.companyName}! Preparei a proposta comercial para a ${selectedProposal.companyName}.\n\nVocê pode conferir o documento completo no link:\n${publicUrl}\n\nFico no aguardo!`;
+                  const waRes = buildWhatsAppUrl(selectedProposal.contactPhone || '', msgText);
+                  return (
+                    <a
+                      href={waRes.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-black font-bold transition-all text-xs flex items-center gap-2 shadow-sm"
+                    >
+                      <MessageSquare className="w-4 h-4" /> Enviar Proposta no WhatsApp
+                    </a>
+                  );
+                })()}
+              </div>
 
               <button
                 onClick={() => {

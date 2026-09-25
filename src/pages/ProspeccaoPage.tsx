@@ -348,22 +348,67 @@ export const ProspeccaoPage: React.FC = () => {
             </select>
           </div>
 
-          <div className="lg:col-span-6 pt-2 flex justify-end">
-            <button type="submit" disabled={loading} className="btn-primary px-8 py-3 text-xs font-bold">
+          <div className="lg:col-span-6 pt-2 flex flex-wrap items-center justify-between gap-3">
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                [(category === 'Outro' ? customCategory : category), nameQuery, neighborhood, selectedCity, selectedState, 'Brasil'].filter(Boolean).join(' ')
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-3 rounded-xl bg-[#4285F4]/15 border border-[#4285F4]/40 text-[#4285F4] hover:bg-[#4285F4]/25 transition-all text-xs font-bold flex items-center gap-2 shadow-sm"
+            >
+              <ExternalLink className="w-4 h-4" />
+              Abrir busca no Google Maps ↗
+            </a>
+
+            <button type="submit" disabled={loading} className="btn-primary px-8 py-3 text-xs font-bold flex items-center gap-2">
               <Search className="w-4 h-4" />
-              {loading ? 'Consultando Google Places API...' : 'Buscar Empresas'}
+              {loading ? 'Consultando Google Places API...' : 'Buscar Empresas via API'}
             </button>
           </div>
         </form>
       </div>
 
-      {/* Error state */}
+      {/* Error / Alternative state when API key is missing or not configured */}
       {apiError && (
-        <ErrorState
-          title={apiError.code === 'MISSING_API_KEY' ? 'Chave do Google Maps não configurada' : 'Erro ao consultar Google Maps'}
-          reason={apiError.message}
-          onRetry={() => handleSearch()}
-        />
+        <div className="card-surface p-6 rounded-2xl border border-[#4285F4]/40 bg-[#0A0A0B] space-y-4">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-[#4285F4]/15 border border-[#4285F4]/30 text-[#4285F4] flex items-center justify-center shrink-0">
+              <MapPin className="w-6 h-6" />
+            </div>
+            <div className="space-y-1.5 flex-1">
+              <h3 className="font-sora text-base font-bold text-white flex items-center gap-2">
+                Pesquisa Direta no Google Maps
+              </h3>
+              <p className="text-xs text-[#C9C9CF] leading-relaxed">
+                Você pode abrir a pesquisa oficial diretamente no Google Maps para visualizar empresas reais de{' '}
+                <strong className="text-white">{category === 'Outro' ? customCategory : category}</strong> em{' '}
+                <strong className="text-white">{selectedCity}/{selectedState}</strong>, com fotos, telefones e avaliações em tempo real!
+              </p>
+            </div>
+          </div>
+
+          <div className="pt-2 flex flex-wrap items-center gap-3 border-t border-[#26262B]">
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                [(category === 'Outro' ? customCategory : category), nameQuery, neighborhood, selectedCity, selectedState, 'Brasil'].filter(Boolean).join(' ')
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-6 py-3 rounded-xl bg-[#4285F4] hover:bg-[#3367D6] text-white transition-all text-xs font-bold flex items-center gap-2 shadow-lg shadow-[#4285F4]/20"
+            >
+              <ExternalLink className="w-4 h-4" />
+              Abrir {(category === 'Outro' ? customCategory : category)} em {selectedCity} no Google Maps ↗
+            </a>
+
+            <button
+              onClick={() => handleSearch()}
+              className="px-5 py-3 rounded-xl bg-[#18181B] border border-[#26262B] text-[#C9C9CF] hover:text-white hover:bg-[#26262B] transition-all text-xs font-semibold"
+            >
+              Tentar novamente na API
+            </button>
+          </div>
+        </div>
       )}
 
       {/* Loading state */}
@@ -541,6 +586,38 @@ export const ProspeccaoPage: React.FC = () => {
               <p className="text-white">
                 <strong>Avaliação:</strong> {selectedPlace.rating ? `⭐ ${selectedPlace.rating} (${selectedPlace.userRatingsTotal || 0} avaliações)` : 'Sem avaliações'}
               </p>
+
+              {/* Interactive Google Maps Embed */}
+              <div className="pt-2 space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-[#8B8B95] font-semibold flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-[#4285F4]" /> Visualização Google Maps:
+                  </span>
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                      selectedPlace.name + ' ' + selectedPlace.address
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#4285F4] hover:underline flex items-center gap-1 text-[11px]"
+                  >
+                    Abrir no Google Maps ↗
+                  </a>
+                </div>
+                <div className="overflow-hidden rounded-xl border border-[#26262B] bg-[#0A0A0B] h-52 w-full">
+                  <iframe
+                    title={`Google Map - ${selectedPlace.name}`}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    loading="lazy"
+                    src={`https://maps.google.com/maps?q=${encodeURIComponent(
+                      selectedPlace.name + ', ' + selectedPlace.address
+                    )}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+                  />
+                </div>
+              </div>
+
               {(selectedPlace as any).latitude && (selectedPlace as any).longitude && (
                 <p className="text-white flex items-center gap-1.5">
                   <Navigation className="w-3.5 h-3.5 text-[#3D8BFF]" />
