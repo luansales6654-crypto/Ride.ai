@@ -131,7 +131,7 @@ export const RegisterSaleModal: React.FC<RegisterSaleModalProps> = ({
           <select
             value={source}
             onChange={(e) => setSource(e.target.value as any)}
-            className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+            className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#7C3AED]"
           >
             <option value="site">Site / Serviço contratado</option>
             <option value="ecommerce">E-commerce / Produto</option>
@@ -147,7 +147,7 @@ export const RegisterSaleModal: React.FC<RegisterSaleModalProps> = ({
             value={customerName}
             onChange={(e) => setCustomerName(e.target.value)}
             placeholder="Nome do cliente ou empresa"
-            className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+            className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#7C3AED]"
           />
         </div>
 
@@ -158,7 +158,7 @@ export const RegisterSaleModal: React.FC<RegisterSaleModalProps> = ({
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Ex: Criação de site institucional + hospedagem"
-            className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+            className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#7C3AED]"
           />
         </div>
 
@@ -173,7 +173,7 @@ export const RegisterSaleModal: React.FC<RegisterSaleModalProps> = ({
                 value={amountStr}
                 onChange={(e) => setAmountStr(e.target.value)}
                 placeholder="1500.00"
-                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 pl-9 outline-none focus:border-[#3D8BFF] font-sora font-bold text-sm"
+                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 pl-9 outline-none focus:border-[#7C3AED] font-sora font-bold text-sm"
               />
             </div>
           </div>
@@ -183,7 +183,7 @@ export const RegisterSaleModal: React.FC<RegisterSaleModalProps> = ({
             <select
               value={paymentMethod}
               onChange={(e) => setPaymentMethod(e.target.value as any)}
-              className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+              className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#7C3AED]"
             >
               <option value="Pix">Pix</option>
               <option value="Cartão">Cartão de Crédito</option>

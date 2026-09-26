@@ -39,7 +39,7 @@ export const NotificacoesPage: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="font-sora text-xl font-bold text-white flex items-center gap-2">
-            <Bell className="w-5 h-5 text-[#3D8BFF]" /> Central de Notificações
+            <Bell className="w-5 h-5 text-[#A855F7]" /> Central de Notificações
           </h2>
           <p className="text-xs text-[#8B8B95] mt-1">Alertas em tempo real sobre vendas, propostas e integrações</p>
         </div>
@@ -57,7 +57,7 @@ export const NotificacoesPage: React.FC = () => {
             <div
               key={n.id}
               className={`p-4 rounded-xl border transition-all text-xs ${
-                n.read ? 'bg-[#0A0A0B] border-[#26262B] text-[#8B8B95]' : 'bg-[#18181B] border-[#3D8BFF]/40 text-white font-semibold'
+                n.read ? 'bg-[#0A0A0B] border-[#26262B] text-[#8B8B95]' : 'bg-[#18181B] border-[#7C3AED]/40 text-white font-semibold'
               }`}
             >
               <div className="flex items-center justify-between">

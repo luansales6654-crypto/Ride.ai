@@ -28,7 +28,7 @@ export const MeusSitesPage: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="font-sora text-xl font-bold text-white flex items-center gap-2">
-            <Globe className="w-5 h-5 text-[#3D8BFF]" /> Meus Sites Gerados ({websites.length})
+            <Globe className="w-5 h-5 text-[#A855F7]" /> Meus Sites Gerados ({websites.length})
           </h2>
           <p className="text-xs text-[#8B8B95] mt-1">Lista de sites criados com o Prompt Mestre RIDE.IA</p>
         </div>
@@ -43,7 +43,7 @@ export const MeusSitesPage: React.FC = () => {
           {websites.map((site) => (
             <div key={site.id} className="card-surface p-5 rounded-2xl border border-[#26262B] space-y-2 text-xs">
               <h3 className="font-sora font-bold text-white text-base">{site.companyName}</h3>
-              <p className="text-[#3D8BFF] font-semibold">{site.segment}</p>
+              <p className="text-[#A855F7] font-semibold">{site.segment}</p>
               <p className="text-[#8B8B95]">Objetivo: {site.goal}</p>
               <p className="text-[#5E5E68] text-[10px]">Criado em: {new Date(site.createdAt).toLocaleDateString('pt-BR')}</p>
             </div>

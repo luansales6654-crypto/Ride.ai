@@ -9,7 +9,7 @@ export const FornecedoresPage: React.FC = () => {
     <div className="space-y-6">
       <div>
         <h2 className="font-sora text-xl font-bold text-white flex items-center gap-2">
-          <Truck className="w-5 h-5 text-[#3D8BFF]" /> Fornecedores Vinculados ({suppliers.length})
+          <Truck className="w-5 h-5 text-[#A855F7]" /> Fornecedores Vinculados ({suppliers.length})
         </h2>
         <p className="text-xs text-[#8B8B95] mt-1">Parceiros de logística e estoque para atendimento dos produtos</p>
       </div>
@@ -19,7 +19,7 @@ export const FornecedoresPage: React.FC = () => {
           <div key={sup.id} className="card-surface p-5 rounded-2xl border border-[#26262B] space-y-2 text-xs">
             <div className="flex items-center justify-between">
               <h3 className="font-sora font-bold text-white">{sup.name}</h3>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded border border-dashed border-[#3D8BFF] text-[#8DBBFF]">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded border border-dashed border-[#7C3AED] text-[#A855F7]">
                 DEMO
               </span>
             </div>

@@ -34,7 +34,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
             {onRetry && (
               <button
                 onClick={onRetry}
-                className="btn-secondary h-9 px-4 text-xs flex items-center gap-2 border-[#3D8BFF]/40 text-[#8DBBFF]"
+                className="btn-secondary h-9 px-4 text-xs flex items-center gap-2 border-[#7C3AED]/40 text-[#A855F7]"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 Tentar novamente

@@ -27,7 +27,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
       className={`card-surface p-8 sm:p-12 text-center flex flex-col items-center justify-center max-w-xl mx-auto my-6 border border-[#26262B] bg-[#111113]/80 backdrop-blur-sm rounded-2xl ${className}`}
     >
       {Icon && (
-        <div className="w-14 h-14 rounded-2xl bg-[#0D347A]/30 border border-[#3D8BFF]/30 flex items-center justify-center text-[#3D8BFF] mb-4 shadow-[0_0_20px_rgba(23,105,255,0.15)]">
+        <div className="w-14 h-14 rounded-2xl bg-[#4C1D95]/30 border border-[#7C3AED]/30 flex items-center justify-center text-[#A855F7] mb-4 shadow-[0_0_20px_rgba(124,58,237,0.2)]">
           <Icon className="w-7 h-7" />
         </div>
       )}

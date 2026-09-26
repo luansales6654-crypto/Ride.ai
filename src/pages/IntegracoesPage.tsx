@@ -39,7 +39,7 @@ export const IntegracoesPage: React.FC = () => {
     <div className="space-y-6">
       <div>
         <h2 className="font-sora text-xl font-bold text-white flex items-center gap-2">
-          <Layers className="w-5 h-5 text-[#3D8BFF]" /> Integrações e Marketplaces
+          <Layers className="w-5 h-5 text-[#A855F7]" /> Integrações e Marketplaces
         </h2>
         <p className="text-xs text-[#8B8B95] mt-1">
           Gerencie suas conexões oficiais com Google Maps, Mercado Livre, Shopee e Gemini AI
@@ -52,7 +52,7 @@ export const IntegracoesPage: React.FC = () => {
           <div>
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <Search className="w-6 h-6 text-[#3D8BFF]" />
+                <Search className="w-6 h-6 text-[#A855F7]" />
                 <h3 className="font-sora font-bold text-base text-white">Google Maps Places</h3>
               </div>
 
@@ -124,7 +124,7 @@ export const IntegracoesPage: React.FC = () => {
           <div>
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <Cpu className="w-6 h-6 text-[#3D8BFF]" />
+                <Cpu className="w-6 h-6 text-[#A855F7]" />
                 <h3 className="font-sora font-bold text-base text-white">Gemini AI (Google)</h3>
               </div>
 

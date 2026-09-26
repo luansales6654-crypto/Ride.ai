@@ -59,7 +59,7 @@ export const OnboardingPage: React.FC = () => {
             <div
               key={s}
               className={`flex-1 h-1.5 rounded-full transition-all ${
-                s <= step ? 'bg-[#1769FF]' : 'bg-[#26262B]'
+                s <= step ? 'bg-[#7C3AED]' : 'bg-[#26262B]'
               }`}
             />
           ))}
@@ -68,7 +68,7 @@ export const OnboardingPage: React.FC = () => {
         <div className="card-surface p-6 sm:p-8 rounded-2xl border border-[#26262B] bg-[#0A0A0B]">
           {step === 1 && (
             <div className="space-y-4 text-xs">
-              <div className="w-10 h-10 rounded-xl bg-[#0D347A]/30 border border-[#3D8BFF]/30 flex items-center justify-center text-[#3D8BFF] mb-2">
+              <div className="w-10 h-10 rounded-xl bg-[#4C1D95]/30 border border-[#7C3AED]/30 flex items-center justify-center text-[#A855F7] mb-2">
                 <Building2 className="w-5 h-5" />
               </div>
               <h3 className="font-sora text-lg font-bold text-white">Nome da sua Agência ou Negócio</h3>
@@ -81,7 +81,7 @@ export const OnboardingPage: React.FC = () => {
                   value={agencyName}
                   onChange={(e) => setAgencyName(e.target.value)}
                   placeholder="Ex: Agência RIDE Digital"
-                  className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-3 outline-none focus:border-[#3D8BFF]"
+                  className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-3 outline-none focus:border-[#7C3AED]"
                 />
               </div>
 
@@ -98,7 +98,7 @@ export const OnboardingPage: React.FC = () => {
 
           {step === 2 && (
             <div className="space-y-4 text-xs">
-              <div className="w-10 h-10 rounded-xl bg-[#0D347A]/30 border border-[#3D8BFF]/30 flex items-center justify-center text-[#3D8BFF] mb-2">
+              <div className="w-10 h-10 rounded-xl bg-[#4C1D95]/30 border border-[#7C3AED]/30 flex items-center justify-center text-[#A855F7] mb-2">
                 <Phone className="w-5 h-5" />
               </div>
               <h3 className="font-sora text-lg font-bold text-white">Seu WhatsApp de Atendimento</h3>
@@ -111,7 +111,7 @@ export const OnboardingPage: React.FC = () => {
                   value={whatsapp}
                   onChange={(e) => setWhatsapp(e.target.value)}
                   placeholder="(11) 99999-9999"
-                  className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-3 outline-none focus:border-[#3D8BFF]"
+                  className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-3 outline-none focus:border-[#7C3AED]"
                 />
               </div>
 
@@ -128,7 +128,7 @@ export const OnboardingPage: React.FC = () => {
 
           {step === 3 && (
             <div className="space-y-4 text-xs">
-              <div className="w-10 h-10 rounded-xl bg-[#0D347A]/30 border border-[#3D8BFF]/30 flex items-center justify-center text-[#3D8BFF] mb-2">
+              <div className="w-10 h-10 rounded-xl bg-[#4C1D95]/30 border border-[#7C3AED]/30 flex items-center justify-center text-[#A855F7] mb-2">
                 <Target className="w-5 h-5" />
               </div>
               <h3 className="font-sora text-lg font-bold text-white">Qual é o seu Foco Principal?</h3>
@@ -145,15 +145,15 @@ export const OnboardingPage: React.FC = () => {
                     onClick={() => setFocus(opt.id as any)}
                     className={`p-3.5 rounded-xl border cursor-pointer transition-all flex items-center justify-between ${
                       focus === opt.id
-                        ? 'bg-[#1769FF]/12 border-[#3D8BFF] text-white shadow-[0_0_15px_rgba(23,105,255,0.2)]'
-                        : 'bg-[#18181B] border-[#26262B] text-[#C9C9CF] hover:border-[#3D8BFF]/30'
+                        ? 'bg-[#7C3AED]/12 border-[#7C3AED] text-white shadow-[0_0_15px_rgba(124,58,237,0.2)]'
+                        : 'bg-[#18181B] border-[#26262B] text-[#C9C9CF] hover:border-[#7C3AED]/30'
                     }`}
                   >
                     <div>
                       <h4 className="font-sora font-bold text-xs">{opt.title}</h4>
                       <p className="text-[11px] text-[#8B8B95]">{opt.desc}</p>
                     </div>
-                    {focus === opt.id && <Check className="w-4 h-4 text-[#3D8BFF] shrink-0" />}
+                    {focus === opt.id && <Check className="w-4 h-4 text-[#A855F7] shrink-0" />}
                   </div>
                 ))}
               </div>

@@ -85,10 +85,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, className = '' }) => {
 
   return (
     <aside
-      className={`w-64 bg-[#0A0A0B] border-r border-[#26262B] flex flex-col h-screen sticky top-0 shrink-0 ${className}`}
+      className={`w-64 bg-[#09090B] border-r border-[#27272A] flex flex-col h-screen sticky top-0 shrink-0 ${className}`}
     >
       {/* Top Header Logo */}
-      <div className="p-5 border-b border-[#26262B]">
+      <div className="p-5 border-b border-[#27272A]">
         <NavLink to="/app" className="inline-block">
           <Logo variant="full" size="md" />
         </NavLink>
@@ -98,7 +98,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, className = '' }) => {
       <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
         {groups.map((group) => (
           <div key={group.title}>
-            <h4 className="px-3 text-[10px] font-bold text-[#5E5E68] tracking-wider uppercase mb-2">
+            <h4 className="px-3 text-[10px] font-bold text-[#71717A] tracking-wider uppercase mb-2">
               {group.title}
             </h4>
             <ul className="space-y-1">
@@ -112,18 +112,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ role, className = '' }) => {
                       className={({ isActive }) =>
                         `flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all relative ${
                           isActive
-                            ? 'bg-[#1769FF]/12 text-[#8DBBFF] font-semibold'
-                            : 'text-[#C9C9CF] hover:bg-[#18181B] hover:text-white'
+                            ? 'bg-[#7C3AED]/20 text-[#E9D5FF] font-semibold border border-[#7C3AED]/30'
+                            : 'text-[#D4D4D8] hover:bg-[#18181C] hover:text-white'
                         }`
                       }
                     >
                       {({ isActive }) => (
                         <>
-                          {/* Active left indicator bar per section 3.2 */}
+                          {/* Active left indicator bar */}
                           {isActive && (
-                            <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-[#3D8BFF] rounded-r-full shadow-[0_0_8px_#3D8BFF]" />
+                            <span className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-5 bg-[#A855F7] rounded-r-full shadow-[0_0_10px_#A855F7]" />
                           )}
-                          <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#3D8BFF]' : 'text-[#8B8B95]'}`} />
+                          <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#C084FC]' : 'text-[#A1A1AA]'}`} />
                           <span className="truncate">{item.label}</span>
                         </>
                       )}

@@ -1,34 +1,64 @@
-import { normalizeBrazilPhone } from './phone';
+import { normalizePhone } from './phone';
+
+export interface WhatsAppUrlResult {
+  url: string | null;
+  isValid: boolean;
+  phoneNormalized: string | null;
+  phoneFormatted: string;
+  error?: string;
+  warning?: string;
+}
 
 /**
- * Builds WhatsApp chat URL with encoded text per rule 10.3 and rule 9.4
+ * Builds official WhatsApp click-to-chat URL per section 2:
+ * https://wa.me/PHONE_NUMBER?text=ENCODED_MESSAGE
  */
-export function buildWhatsAppUrl(phone: string, text: string = ''): {
-  url: string;
-  isOverLimit: boolean;
-  phoneNormalized: string | null;
-  warning?: string;
-} {
-  const phoneRes = normalizeBrazilPhone(phone);
-  
-  if (!phoneRes.normalized) {
-    // Alternative fallback format without phone
-    const fallbackUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+export function buildWhatsAppUrl(phone: string, text: string = ''): WhatsAppUrlResult {
+  const phoneRes = normalizePhone(phone);
+
+  if (!phoneRes.isValid || !phoneRes.normalized) {
     return {
-      url: fallbackUrl,
-      isOverLimit: fallbackUrl.length > 2000,
+      url: null,
+      isValid: false,
       phoneNormalized: null,
-      warning: phoneRes.warning || 'Número de telefone inválido. Selecione o contato no WhatsApp.',
+      phoneFormatted: phoneRes.formatted || phone,
+      error: phoneRes.error || 'Telefone inválido ou não informado. Digite um número válido com DDD.',
+      warning: phoneRes.warning,
     };
   }
 
-  const encodedText = encodeURIComponent(text);
-  const fullUrl = `https://wa.me/${phoneRes.normalized}?text=${encodedText}`;
+  const encodedText = encodeURIComponent(text || '');
+  const url = `https://wa.me/${phoneRes.normalized}?text=${encodedText}`;
 
   return {
-    url: fullUrl,
-    isOverLimit: fullUrl.length > 2000,
+    url,
+    isValid: true,
     phoneNormalized: phoneRes.normalized,
+    phoneFormatted: phoneRes.formatted,
     warning: phoneRes.warning,
   };
+}
+
+/**
+ * Opens WhatsApp click-to-chat link in a new tab or window.
+ */
+export function openWhatsAppChat(phone: string, text: string): { success: boolean; error?: string } {
+  const result = buildWhatsAppUrl(phone, text);
+
+  if (!result.isValid || !result.url) {
+    return {
+      success: false,
+      error: result.error || 'Informe um número de WhatsApp válido antes de enviar.',
+    };
+  }
+
+  try {
+    window.open(result.url, '_blank', 'noopener,noreferrer');
+    return { success: true };
+  } catch (err: any) {
+    return {
+      success: false,
+      error: 'Não foi possível abrir o link do WhatsApp no seu navegador.',
+    };
+  }
 }

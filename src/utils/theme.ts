@@ -11,7 +11,7 @@ export interface ButtonTheme {
 export const PRESET_BUTTON_THEMES: ButtonTheme[] = [
   {
     id: 'blue',
-    name: 'Azul Elétrico (Padrão)',
+    name: 'Azul Elétrico (Padrão RIDE.AI)',
     primaryHex: '#1769FF',
     gradStart: '#3D8BFF',
     gradEnd: '#1769FF',
@@ -28,22 +28,13 @@ export const PRESET_BUTTON_THEMES: ButtonTheme[] = [
     glowRgba: 'rgba(16, 185, 129, 0.35)',
   },
   {
-    id: 'purple',
-    name: 'Roxo Neon',
-    primaryHex: '#8B5CF6',
-    gradStart: '#A78BFA',
-    gradEnd: '#7C3AED',
-    gradDark: '#4C1D95',
-    glowRgba: 'rgba(139, 92, 246, 0.35)',
-  },
-  {
-    id: 'crimson',
-    name: 'Vermelho Carmim',
-    primaryHex: '#EF4444',
-    gradStart: '#F87171',
-    gradEnd: '#DC2626',
-    gradDark: '#7F1D1D',
-    glowRgba: 'rgba(239, 68, 68, 0.35)',
+    id: 'cyan',
+    name: 'Ciano Elétrico',
+    primaryHex: '#06B6D4',
+    gradStart: '#22D3EE',
+    gradEnd: '#0891B2',
+    gradDark: '#164E63',
+    glowRgba: 'rgba(6, 182, 212, 0.35)',
   },
   {
     id: 'amber',
@@ -53,24 +44,6 @@ export const PRESET_BUTTON_THEMES: ButtonTheme[] = [
     gradEnd: '#D97706',
     gradDark: '#78350F',
     glowRgba: 'rgba(245, 158, 11, 0.35)',
-  },
-  {
-    id: 'pink',
-    name: 'Rosa Magenta',
-    primaryHex: '#EC4899',
-    gradStart: '#F472B6',
-    gradEnd: '#DB2777',
-    gradDark: '#831843',
-    glowRgba: 'rgba(236, 72, 153, 0.35)',
-  },
-  {
-    id: 'cyan',
-    name: 'Ciano Elétrico',
-    primaryHex: '#06B6D4',
-    gradStart: '#22D3EE',
-    gradEnd: '#0891B2',
-    gradDark: '#164E63',
-    glowRgba: 'rgba(6, 182, 212, 0.35)',
   },
 ];
 
@@ -122,8 +95,10 @@ export function initButtonColor() {
     const saved = localStorage.getItem('ride_button_color');
     if (saved) {
       applyButtonColor(saved);
+    } else {
+      applyButtonColor('#1769FF');
     }
   } catch (e) {
-    // ignore
+    applyButtonColor('#1769FF');
   }
 }

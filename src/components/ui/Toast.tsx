@@ -48,7 +48,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           >
             {toast.type === 'success' && <CheckCircle2 className="w-5 h-5 text-[#2FBF71] shrink-0 mt-0.5" />}
             {toast.type === 'error' && <AlertCircle className="w-5 h-5 text-[#FF6B57] shrink-0 mt-0.5" />}
-            {toast.type === 'info' && <Info className="w-5 h-5 text-[#3D8BFF] shrink-0 mt-0.5" />}
+            {toast.type === 'info' && <Info className="w-5 h-5 text-[#A855F7] shrink-0 mt-0.5" />}
 
             <div className="flex-1">
               <h5 className="font-sora text-sm font-semibold text-white">{toast.title}</h5>
@@ -59,7 +59,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
                     toast.onAction?.();
                     removeToast(toast.id);
                   }}
-                  className="mt-2 text-xs font-semibold text-[#3D8BFF] hover:underline"
+                  className="mt-2 text-xs font-semibold text-[#A855F7] hover:underline"
                 >
                   {toast.actionText}
                 </button>

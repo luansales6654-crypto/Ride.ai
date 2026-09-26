@@ -102,7 +102,32 @@ export const AppLayout: React.FC = () => {
       }
     });
 
-    return () => unsubscribeAuth();
+    // Re-check authentication when returning to the tab to prevent stuck states
+    const handleFocusOrVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        const u = auth.currentUser;
+        if (!u) {
+          const stored = localStorage.getItem('ride_custom_session');
+          if (stored) {
+            try {
+              const p = JSON.parse(stored);
+              if (p && p.uid && !currentUser) {
+                setCurrentUser({ uid: p.uid, email: p.email, displayName: p.name } as any);
+              }
+            } catch (e) {}
+          }
+        }
+      }
+    };
+
+    window.addEventListener('focus', handleFocusOrVisibilityChange);
+    document.addEventListener('visibilitychange', handleFocusOrVisibilityChange);
+
+    return () => {
+      unsubscribeAuth();
+      window.removeEventListener('focus', handleFocusOrVisibilityChange);
+      document.removeEventListener('visibilitychange', handleFocusOrVisibilityChange);
+    };
   }, []);
 
   if (loading) {

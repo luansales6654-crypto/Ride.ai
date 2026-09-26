@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { Bell, User, Settings, LogOut, ChevronDown } from 'lucide-react';
+import { Bell, User, Settings, LogOut, ChevronDown, ArrowLeft } from 'lucide-react';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../database/firebase';
 
@@ -18,6 +18,14 @@ export const Topbar: React.FC<TopbarProps> = ({
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const handleGoBack = () => {
+    if (window.history.length > 2) {
+      navigate(-1);
+    } else {
+      navigate('/app');
+    }
+  };
 
   const getPageTitle = (pathname: string) => {
     if (pathname === '/app') return 'Visão Geral (Faturamento)';
@@ -40,7 +48,7 @@ export const Topbar: React.FC<TopbarProps> = ({
     if (pathname.startsWith('/app/notificacoes')) return 'Central de Notificações';
     if (pathname.startsWith('/app/admin/plataforma')) return 'Painel Admin — Plataforma';
     if (pathname.startsWith('/app/admin/operacao')) return 'Painel Admin — Operação';
-    return 'RIDE.IA';
+    return 'RIDE.AI';
   };
 
   const handleLogout = async () => {
@@ -55,10 +63,21 @@ export const Topbar: React.FC<TopbarProps> = ({
     }
   };
 
+  const isHome = location.pathname === '/app' || location.pathname === '/app/';
 
   return (
-    <header className="h-16 bg-[#0A0A0B] border-b border-[#26262B] px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 shrink-0">
+    <header className="h-16 bg-[#000000] border-b border-[#26262B] px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 shrink-0">
       <div className="flex items-center gap-3">
+        {!isHome && (
+          <button
+            onClick={handleGoBack}
+            className="w-9 h-9 rounded-xl bg-[#111113] border border-[#26262B] hover:border-[#7C3AED] text-[#C9C9CF] hover:text-white flex items-center justify-center transition-all shadow-sm"
+            title="Voltar para a página anterior"
+          >
+            <ArrowLeft className="w-4 h-4 text-[#A855F7]" />
+          </button>
+        )}
+
         <h1 className="font-sora text-base sm:text-lg font-bold text-white truncate">
           {getPageTitle(location.pathname)}
         </h1>
@@ -68,12 +87,12 @@ export const Topbar: React.FC<TopbarProps> = ({
         {/* Notifications Bell */}
         <NavLink
           to="/app/notificacoes"
-          className="relative w-10 h-10 rounded-xl bg-[#111113] border border-[#26262B] hover:border-[#3D8BFF]/40 text-[#C9C9CF] hover:text-white flex items-center justify-center transition-all"
+          className="relative w-10 h-10 rounded-xl bg-[#111113] border border-[#26262B] hover:border-[#7C3AED]/50 text-[#C9C9CF] hover:text-white flex items-center justify-center transition-all"
           title="Notificações"
         >
           <Bell className="w-4 h-4" />
           {unreadNotificationsCount > 0 && (
-            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-[#1769FF] text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-[0_0_8px_#1769FF]">
+            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-[#7C3AED] text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-[0_0_8px_#7C3AED]">
               {unreadNotificationsCount > 9 ? '9+' : unreadNotificationsCount}
             </span>
           )}
@@ -83,9 +102,9 @@ export const Topbar: React.FC<TopbarProps> = ({
         <div className="relative">
           <button
             onClick={() => setUserMenuOpen(!userMenuOpen)}
-            className="flex items-center gap-2.5 p-1.5 pr-3 rounded-xl bg-[#111113] border border-[#26262B] hover:border-[#3D8BFF]/40 text-left transition-all"
+            className="flex items-center gap-2.5 p-1.5 pr-3 rounded-xl bg-[#111113] border border-[#26262B] hover:border-[#7C3AED]/50 text-left transition-all"
           >
-            <div className="w-8 h-8 rounded-lg bg-[#0D347A] border border-[#3D8BFF]/40 text-[#3D8BFF] flex items-center justify-center font-sora font-bold text-xs uppercase">
+            <div className="w-8 h-8 rounded-lg bg-[#3b0764] border border-[#7C3AED]/50 text-[#A855F7] flex items-center justify-center font-sora font-bold text-xs uppercase">
               {userName.slice(0, 2)}
             </div>
             <div className="hidden sm:block text-xs">
@@ -126,3 +145,4 @@ export const Topbar: React.FC<TopbarProps> = ({
     </header>
   );
 };
+

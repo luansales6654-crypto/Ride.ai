@@ -25,7 +25,7 @@ export const MobileNav: React.FC = () => {
               end={item.path === '/app'}
               className={({ isActive }) =>
                 `flex flex-col items-center justify-center gap-1 w-full h-full text-[10px] font-medium transition-colors ${
-                  isActive ? 'text-[#3D8BFF] font-bold' : 'text-[#8B8B95]'
+                  isActive ? 'text-[#A855F7] font-bold' : 'text-[#8B8B95]'
                 }`
               }
             >

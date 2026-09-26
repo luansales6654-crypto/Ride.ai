@@ -29,7 +29,7 @@ import {
 } from 'lucide-react';
 
 const STATUS_COLUMNS: { id: LeadStatus; label: string; color: string }[] = [
-  { id: 'novo', label: 'Novo', color: 'border-l-blue-500' },
+  { id: 'novo', label: 'Novo', color: 'border-l-purple-500' },
   { id: 'contatado', label: 'Em contato', color: 'border-l-yellow-500' },
   { id: 'respondeu', label: 'Respondeu', color: 'border-l-indigo-500' },
   { id: 'proposta_enviada', label: 'Proposta enviada', color: 'border-l-purple-500' },
@@ -46,8 +46,15 @@ export const LeadsPage: React.FC = () => {
 
   // AI Message Generator state inside Lead modal
   const [generatedMsg, setGeneratedMsg] = useState<{ curta: string; padrao: string; consultiva: string } | null>(null);
+  const [editableResponseText, setEditableResponseText] = useState('');
   const [generatingMsg, setGeneratingMsg] = useState(false);
   const [selectedVariation, setSelectedVariation] = useState<'curta' | 'padrao' | 'consultiva'>('padrao');
+  const [aiTone, setAiTone] = useState('direto');
+  const [aiFocus, setAiFocus] = useState('site novo');
+
+  // Lead notes state
+  const [leadNotes, setLeadNotes] = useState('');
+  const [savingNotes, setSavingNotes] = useState(false);
 
   // Register sale modal state
   const [saleModalOpen, setRegisterSaleModalOpen] = useState(false);
@@ -55,6 +62,45 @@ export const LeadsPage: React.FC = () => {
 
   const navigate = useNavigate();
   const { showToast } = useToast();
+
+  useEffect(() => {
+    if (selectedLead) {
+      setLeadNotes(selectedLead.notes || selectedLead.observacoes || '');
+      setGeneratedMsg(null);
+      setEditableResponseText('');
+    }
+  }, [selectedLead]);
+
+  const handleSaveNotes = async () => {
+    if (!selectedLead) return;
+    const user = auth.currentUser;
+    if (!user) return;
+
+    setSavingNotes(true);
+    try {
+      const leadRef = doc(db, 'users', user.uid, 'leads', selectedLead.id);
+      await updateDoc(leadRef, {
+        notes: leadNotes,
+        observacoes: leadNotes,
+        updatedAt: new Date().toISOString(),
+      });
+
+      // Log interaction
+      await addDoc(collection(db, 'users', user.uid, 'leadInteractions'), {
+        leadId: selectedLead.id,
+        type: 'note_added',
+        text: `Anotação salva: ${leadNotes.slice(0, 50)}...`,
+        createdAt: new Date().toISOString(),
+      });
+
+      showToast({ type: 'success', title: 'Observação salva com sucesso!' });
+      setSelectedLead({ ...selectedLead, notes: leadNotes, observacoes: leadNotes });
+    } catch (err: any) {
+      showToast({ type: 'error', title: 'Erro ao salvar anotação', message: err.message });
+    } finally {
+      setSavingNotes(false);
+    }
+  };
 
   useEffect(() => {
     const user = auth.currentUser;
@@ -138,6 +184,7 @@ export const LeadsPage: React.FC = () => {
   const handleGenerateMessage = async (lead: Lead) => {
     setGeneratingMsg(true);
     setGeneratedMsg(null);
+    setEditableResponseText('');
 
     try {
       const res = await fetch('/api/ai/message', {
@@ -147,24 +194,30 @@ export const LeadsPage: React.FC = () => {
           companyName: lead.companyName,
           category: lead.category,
           city: lead.city,
+          phone: lead.phone,
           siteStatus: lead.siteStatus,
           rating: lead.companyData?.rating,
           userRatingsTotal: lead.companyData?.userRatingsTotal,
+          tone: aiTone,
+          focus: aiFocus,
         }),
       });
 
       const json = await res.json();
-      if (json.ok) {
+      if (json.ok && json.data) {
         setGeneratedMsg(json.data);
+        const initialText = json.data[selectedVariation] || json.data.padrao || '';
+        setEditableResponseText(initialText);
       } else {
-        showToast({ type: 'error', title: 'Erro ao gerar mensagem', message: json.error?.message });
+        showToast({ type: 'error', title: 'Erro ao gerar resposta', message: json.error?.message || 'Serviço indisponível' });
       }
     } catch (err: any) {
-      showToast({ type: 'error', title: 'Erro na API de IA' });
+      showToast({ type: 'error', title: 'Erro na API de IA', message: 'Verifique sua conexão de rede.' });
     } finally {
       setGeneratingMsg(false);
     }
   };
+
 
   const filteredLeads = leads.filter((l) => {
     if (!searchQuery) return true;
@@ -187,7 +240,7 @@ export const LeadsPage: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por empresa, categoria ou cidade..."
-            className="w-full bg-[#0A0A0B] border border-[#26262B] text-white text-xs rounded-xl p-2.5 pl-9 outline-none focus:border-[#3D8BFF]"
+            className="w-full bg-[#0A0A0B] border border-[#26262B] text-white text-xs rounded-xl p-2.5 pl-9 outline-none focus:border-[#7C3AED]"
           />
         </div>
 
@@ -197,7 +250,7 @@ export const LeadsPage: React.FC = () => {
             onClick={() => setViewMode('kanban')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all ${
               viewMode === 'kanban'
-                ? 'bg-[#1769FF] text-white shadow-[0_0_12px_rgba(23,105,255,0.4)]'
+                ? 'bg-[#7C3AED] text-white shadow-[0_0_12px_rgba(124,58,237,0.4)]'
                 : 'text-[#8B8B95] hover:text-white'
             }`}
           >
@@ -207,7 +260,7 @@ export const LeadsPage: React.FC = () => {
             onClick={() => setViewMode('list')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2 transition-all ${
               viewMode === 'list'
-                ? 'bg-[#1769FF] text-white shadow-[0_0_12px_rgba(23,105,255,0.4)]'
+                ? 'bg-[#7C3AED] text-white shadow-[0_0_12px_rgba(124,58,237,0.4)]'
                 : 'text-[#8B8B95] hover:text-white'
             }`}
           >
@@ -241,11 +294,11 @@ export const LeadsPage: React.FC = () => {
                   {colLeads.map((lead) => (
                     <div
                       key={lead.id}
-                      className="card-surface p-4 rounded-xl border border-[#26262B] hover:border-[#3D8BFF]/40 cursor-pointer transition-all space-y-2 group"
+                      className="card-surface p-4 rounded-xl border border-[#26262B] hover:border-[#7C3AED]/40 cursor-pointer transition-all space-y-2 group"
                       onClick={() => setSelectedLead(lead)}
                     >
                       <div className="flex items-start justify-between gap-1">
-                        <h4 className="font-sora font-bold text-xs text-white group-hover:text-[#3D8BFF] transition-colors leading-snug">
+                        <h4 className="font-sora font-bold text-xs text-white group-hover:text-[#A855F7] transition-colors leading-snug">
                           {lead.companyName}
                         </h4>
                         <button
@@ -322,7 +375,7 @@ export const LeadsPage: React.FC = () => {
                     <td className="p-4 text-right">
                       <button
                         onClick={() => setSelectedLead(lead)}
-                        className="btn-ghost h-8 px-3 text-xs text-[#3D8BFF]"
+                        className="btn-ghost h-8 px-3 text-xs text-[#A855F7]"
                       >
                         Abrir
                       </button>
@@ -379,11 +432,34 @@ export const LeadsPage: React.FC = () => {
               </div>
             </div>
 
+            {/* Observações / Anotações do Lead */}
+            <div className="p-4 bg-[#111113] rounded-xl border border-[#26262B] space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-white font-semibold flex items-center gap-1.5 text-xs">
+                  <FileText className="w-3.5 h-3.5 text-[#7C3AED]" /> Observações & Anotações do Lead
+                </span>
+                <button
+                  onClick={handleSaveNotes}
+                  disabled={savingNotes}
+                  className="px-3 py-1 rounded-lg bg-[#7C3AED] hover:bg-[#6D28D9] text-white text-[11px] font-bold transition-all"
+                >
+                  {savingNotes ? 'Salvando...' : 'Salvar Anotação'}
+                </button>
+              </div>
+              <textarea
+                rows={3}
+                value={leadNotes}
+                onChange={(e) => setLeadNotes(e.target.value)}
+                placeholder="Adicione observações sobre a negociação, reuniões ou histórico com esta empresa..."
+                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 text-xs outline-none focus:border-[#7C3AED]"
+              />
+            </div>
+
             {/* Google Maps View Embed */}
-            <div className="p-4 bg-[#18181B] rounded-xl border border-[#26262B] space-y-2">
+            <div className="p-4 bg-[#111113] rounded-xl border border-[#26262B] space-y-2">
               <div className="flex items-center justify-between text-xs">
                 <span className="text-[#8B8B95] font-semibold flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-[#4285F4]" /> Mapa da Empresa no Google Maps
+                  <MapPin className="w-3.5 h-3.5 text-[#7C3AED]" /> Localização no Google Maps
                 </span>
                 <a
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
@@ -391,12 +467,12 @@ export const LeadsPage: React.FC = () => {
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#4285F4] hover:underline flex items-center gap-1 text-[11px]"
+                  className="text-[#A855F7] hover:underline flex items-center gap-1 text-[11px]"
                 >
                   Abrir no Google Maps <ExternalLink className="w-3 h-3" />
                 </a>
               </div>
-              <div className="overflow-hidden rounded-xl border border-[#26262B] bg-[#0A0A0B] h-48 w-full">
+              <div className="overflow-hidden rounded-xl border border-[#26262B] bg-[#0A0A0B] h-44 w-full">
                 <iframe
                   title={`Google Map - ${selectedLead.companyName}`}
                   width="100%"
@@ -410,56 +486,89 @@ export const LeadsPage: React.FC = () => {
               </div>
             </div>
 
-            {/* AI Generator Button inside Lead modal */}
-            <div className="p-4 rounded-xl border border-[#3D8BFF]/30 bg-[#0D347A]/10 space-y-3">
-              <div className="flex items-center justify-between">
+            {/* AI Response Generator Area */}
+            <div className="p-4 rounded-xl border border-[#7C3AED]/40 bg-[#1e0a45]/30 space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
                 <h4 className="font-sora font-bold text-white flex items-center gap-2">
-                  <Wand2 className="w-4 h-4 text-[#3D8BFF]" /> Gerar Mensagem de Abordagem com IA
+                  <Wand2 className="w-4 h-4 text-[#A855F7]" /> Gerar Resposta Personalizada com IA
                 </h4>
-                <button
-                  onClick={() => handleGenerateMessage(selectedLead)}
-                  disabled={generatingMsg}
-                  className="btn-primary h-8 px-3 text-xs"
-                >
-                  {generatingMsg ? 'Gerando...' : 'Gerar Abordagem'}
-                </button>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <select
+                    value={aiTone}
+                    onChange={(e) => setAiTone(e.target.value)}
+                    className="bg-[#18181B] border border-[#26262B] text-[#C9C9CF] rounded-lg text-[11px] p-1.5 outline-none"
+                  >
+                    <option value="direto">Tom: Direto</option>
+                    <option value="consultivo">Tom: Consultivo</option>
+                    <option value="amigavel">Tom: Amigável</option>
+                    <option value="promocional">Tom: Promocional</option>
+                  </select>
+
+                  <button
+                    onClick={() => handleGenerateMessage(selectedLead)}
+                    disabled={generatingMsg}
+                    className="btn-primary h-8 px-4 text-xs font-bold"
+                  >
+                    {generatingMsg ? 'Gerando Resposta...' : generatedMsg ? 'Gerar Nova Resposta' : 'Gerar Resposta'}
+                  </button>
+                </div>
               </div>
 
               {generatedMsg && (
                 <div className="space-y-3 pt-3 border-t border-[#26262B]">
-                  <div className="flex gap-2">
-                    {(['curta', 'padrao', 'consultiva'] as const).map((varKey) => (
-                      <button
-                        key={varKey}
-                        onClick={() => setSelectedVariation(varKey)}
-                        className={`px-3 py-1 rounded-lg font-semibold text-[11px] capitalize ${
-                          selectedVariation === varKey
-                            ? 'bg-[#1769FF] text-white'
-                            : 'bg-[#18181B] text-[#8B8B95]'
-                        }`}
-                      >
-                        {varKey}
-                      </button>
-                    ))}
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
+                    <div className="flex gap-2">
+                      {(['curta', 'padrao', 'consultiva'] as const).map((varKey) => (
+                        <button
+                          key={varKey}
+                          onClick={() => {
+                            setSelectedVariation(varKey);
+                            setEditableResponseText(generatedMsg[varKey] || '');
+                          }}
+                          className={`px-3 py-1 rounded-lg font-semibold text-[11px] capitalize transition-all ${
+                            selectedVariation === varKey
+                              ? 'bg-[#7C3AED] text-white shadow-[0_0_12px_rgba(124,58,237,0.5)]'
+                              : 'bg-[#18181B] text-[#8B8B95] hover:text-white'
+                          }`}
+                        >
+                          {varKey}
+                        </button>
+                      ))}
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(editableResponseText);
+                        showToast({ type: 'success', title: 'Resposta copiada para a área de transferência!' });
+                      }}
+                      className="px-3 py-1 rounded-lg bg-[#18181B] border border-[#26262B] text-white text-[11px] font-semibold hover:border-[#7C3AED]"
+                    >
+                      Copiar Resposta
+                    </button>
                   </div>
 
-                  <div className="p-3 bg-[#18181B] rounded-xl text-white font-mono leading-relaxed">
-                    {generatedMsg[selectedVariation]}
-                  </div>
+                  <textarea
+                    rows={4}
+                    value={editableResponseText}
+                    onChange={(e) => setEditableResponseText(e.target.value)}
+                    className="w-full bg-[#0A0A0B] border border-[#7C3AED]/50 rounded-xl p-3 text-white font-sans text-xs leading-relaxed outline-none focus:border-[#8B5CF6]"
+                  />
 
                   {selectedLead.phone && (
                     <a
-                      href={buildWhatsAppUrl(selectedLead.phone, generatedMsg[selectedVariation]).url}
+                      href={buildWhatsAppUrl(selectedLead.phone, editableResponseText).url || undefined}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="btn-primary h-9 px-4 text-xs font-bold inline-flex"
+                      className="w-full py-2.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-black font-bold transition-all text-xs flex items-center justify-center gap-2 shadow-sm"
                     >
-                      <MessageSquare className="w-3.5 h-3.5" /> Abrir no WhatsApp
+                      <MessageSquare className="w-4 h-4" /> Enviar Resposta via WhatsApp 📲
                     </a>
                   )}
                 </div>
               )}
             </div>
+
 
             {/* Actions for this lead */}
             <div className="pt-4 flex flex-wrap gap-2 justify-end border-t border-[#26262B]">

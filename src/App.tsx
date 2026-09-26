@@ -48,6 +48,18 @@ export default function App() {
           <Route path="/privacidade" element={<PrivacidadePage />} />
           <Route path="/p/:token" element={<ProposalPublicPage />} />
 
+          {/* Top-level Route Aliases for Direct Address Bar Navigation */}
+          <Route path="/dashboard" element={<Navigate to="/app" replace />} />
+          <Route path="/prospeccao" element={<Navigate to="/app/prospeccao" replace />} />
+          <Route path="/crm" element={<Navigate to="/app/leads" replace />} />
+          <Route path="/leads" element={<Navigate to="/app/leads" replace />} />
+          <Route path="/respostas" element={<Navigate to="/app/leads" replace />} />
+          <Route path="/propostas" element={<Navigate to="/app/propostas" replace />} />
+          <Route path="/criador-de-sites" element={<Navigate to="/app/criador-de-sites" replace />} />
+          <Route path="/sites" element={<Navigate to="/app/sites" replace />} />
+          <Route path="/vendas" element={<Navigate to="/app/vendas" replace />} />
+          <Route path="/configuracoes" element={<Navigate to="/app/configuracoes" replace />} />
+
 
           {/* Protected Application Routes */}
           <Route path="/app" element={<AppLayout />}>

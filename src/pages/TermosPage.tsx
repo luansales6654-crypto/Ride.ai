@@ -9,7 +9,7 @@ export const TermosPage: React.FC = () => {
         <NavLink to="/">
           <Logo variant="full" size="md" />
         </NavLink>
-        <NavLink to="/" className="text-xs text-[#3D8BFF] hover:underline">Voltar para início</NavLink>
+        <NavLink to="/" className="text-xs text-[#A855F7] hover:underline">Voltar para início</NavLink>
       </div>
 
       <div className="space-y-4 text-xs text-[#C9C9CF] leading-relaxed">

@@ -89,7 +89,7 @@ export const CatalogoPage: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h2 className="font-sora text-xl font-bold text-white flex items-center gap-2">
-            <Grid className="w-5 h-5 text-[#3D8BFF]" />
+            <Grid className="w-5 h-5 text-[#A855F7]" />
             Catálogo de Produtos ({products.length} itens)
           </h2>
           <p className="text-xs text-[#8B8B95] mt-1">
@@ -119,14 +119,14 @@ export const CatalogoPage: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por nome do produto, SKU ou fornecedor..."
-            className="w-full bg-[#18181B] border border-[#26262B] text-white text-xs rounded-xl p-2.5 pl-9 outline-none focus:border-[#3D8BFF]"
+            className="w-full bg-[#18181B] border border-[#26262B] text-white text-xs rounded-xl p-2.5 pl-9 outline-none focus:border-[#7C3AED]"
           />
         </div>
 
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="bg-[#18181B] border border-[#26262B] text-white text-xs rounded-xl p-2.5 outline-none focus:border-[#3D8BFF] w-full md:w-64"
+          className="bg-[#18181B] border border-[#26262B] text-white text-xs rounded-xl p-2.5 outline-none focus:border-[#7C3AED] w-full md:w-64"
         >
           <option value="all">Todas as Categorias ({products.length})</option>
           {DEMO_CATEGORIES.map((cat) => (
@@ -146,12 +146,12 @@ export const CatalogoPage: React.FC = () => {
                 key={product.id}
                 onClick={() => setSelectedProduct(product)}
                 className={`card-surface p-3 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between relative group ${
-                  isSelected ? 'card-selected bg-[#0A1F4D]/20' : 'border-[#26262B] hover:border-[#3D8BFF]/40'
+                  isSelected ? 'card-selected bg-[#4C1D95]/20' : 'border-[#26262B] hover:border-[#7C3AED]/40'
                 }`}
               >
                 {/* DEMO Pill Badge */}
                 {product.isDemo && (
-                  <span className="absolute top-2 left-2 z-10 text-[9px] font-bold px-1.5 py-0.5 rounded border border-dashed border-[#3D8BFF] text-[#8DBBFF] bg-[#0A0A0B]/80">
+                  <span className="absolute top-2 left-2 z-10 text-[9px] font-bold px-1.5 py-0.5 rounded border border-dashed border-[#7C3AED] text-[#A855F7] bg-[#0A0A0B]/80">
                     DEMO
                   </span>
                 )}
@@ -189,8 +189,8 @@ export const CatalogoPage: React.FC = () => {
                     onClick={(e) => handleToggleSelectProduct(product.id, e)}
                     className={`w-full h-8 text-[11px] font-semibold rounded-xl flex items-center justify-center gap-1 transition-all ${
                       isSelected
-                        ? 'bg-[#1769FF] text-white'
-                        : 'bg-[#18181B] text-[#8DBBFF] hover:bg-[#26262B]'
+                        ? 'bg-[#7C3AED] text-white'
+                        : 'bg-[#18181B] text-[#A855F7] hover:bg-[#26262B]'
                     }`}
                   >
                     {isSelected ? <CheckCircle className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
@@ -211,7 +211,7 @@ export const CatalogoPage: React.FC = () => {
 
       {/* Floating Selection Bar per section 14.6 */}
       {selectedProductIds.size > 0 && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-[#111113] border border-[#3D8BFF]/50 p-4 rounded-2xl shadow-2xl flex items-center gap-4 text-xs max-w-xl w-full mx-4 backdrop-blur-md">
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-[#111113] border border-[#7C3AED]/50 p-4 rounded-2xl shadow-2xl flex items-center gap-4 text-xs max-w-xl w-full mx-4 backdrop-blur-md">
           <span className="font-sora font-bold text-white">
             {selectedProductIds.size} selecionado(s)
           </span>
@@ -276,7 +276,7 @@ export const CatalogoPage: React.FC = () => {
 
                 {/* Supplier card */}
                 <div className="p-4 bg-[#18181B] rounded-xl border border-[#26262B] space-y-1">
-                  <span className="text-[10px] font-bold text-[#3D8BFF] uppercase">Fornecedor Vinculado</span>
+                  <span className="text-[10px] font-bold text-[#A855F7] uppercase">Fornecedor Vinculado</span>
                   <p className="font-sora font-bold text-white">{selectedProduct.supplierName}</p>
                   <p className="text-[#8B8B95]">Prazo de postagem: {selectedProduct.shipping.handlingDays} dia útil</p>
                 </div>

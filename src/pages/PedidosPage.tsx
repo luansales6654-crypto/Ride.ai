@@ -7,7 +7,7 @@ export const PedidosPage: React.FC = () => {
     <div className="space-y-6">
       <div>
         <h2 className="font-sora text-xl font-bold text-white flex items-center gap-2">
-          <ShoppingCart className="w-5 h-5 text-[#3D8BFF]" /> Pedidos dos Marketplaces
+          <ShoppingCart className="w-5 h-5 text-[#A855F7]" /> Pedidos dos Marketplaces
         </h2>
         <p className="text-xs text-[#8B8B95] mt-1">Sincronização de vendas e despachos</p>
       </div>

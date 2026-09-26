@@ -8,7 +8,7 @@ export const MeusProdutosPage: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="font-sora text-xl font-bold text-white flex items-center gap-2">
-            <PackageCheck className="w-5 h-5 text-[#3D8BFF]" /> Meus Produtos
+            <PackageCheck className="w-5 h-5 text-[#A855F7]" /> Meus Produtos
           </h2>
           <p className="text-xs text-[#8B8B95] mt-1">Produtos cadastrados por você prontos para publicação</p>
         </div>

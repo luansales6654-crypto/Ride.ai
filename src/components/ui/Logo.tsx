@@ -21,7 +21,7 @@ export const Logo: React.FC<LogoProps> = ({ variant = 'full', className = '', si
 
   return (
     <div className={`inline-flex items-center gap-2.5 ${className}`}>
-      {/* Símbolo RIDE.IA */}
+      {/* Símbolo RIDE.AI */}
       <div
         className={`${iconSizes[size]} bg-[#0A0A0B] border border-[#3D8BFF]/40 rounded-xl flex items-center justify-center relative shadow-[0_0_15px_rgba(23,105,255,0.2)] group transition-all`}
       >
@@ -59,7 +59,7 @@ export const Logo: React.FC<LogoProps> = ({ variant = 'full', className = '', si
       {variant === 'full' && (
         <div className={`font-sora font-bold tracking-tight ${textSizes[size]} flex items-baseline`}>
           <span className="text-white">RIDE</span>
-          <span className="text-[#3D8BFF] font-extrabold shadow-[0_0_10px_rgba(61,139,255,0.5)]">.IA</span>
+          <span className="text-[#3D8BFF] font-extrabold shadow-[0_0_10px_rgba(61,139,255,0.5)]">.AI</span>
         </div>
       )}
     </div>

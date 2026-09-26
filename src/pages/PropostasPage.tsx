@@ -205,7 +205,7 @@ export const PropostasPage: React.FC = () => {
             return (
               <div
                 key={prop.id}
-                className="card-surface p-5 rounded-2xl border border-[#26262B] flex flex-col justify-between space-y-4 hover:border-[#3D8BFF]/40 transition-all"
+                className="card-surface p-5 rounded-2xl border border-[#26262B] flex flex-col justify-between space-y-4 hover:border-[#7C3AED]/40 transition-all"
               >
                 <div>
                   <div className="flex items-start justify-between gap-2 mb-2">
@@ -220,7 +220,7 @@ export const PropostasPage: React.FC = () => {
                         prop.status === 'aceita'
                           ? 'bg-[#2FBF71]/15 text-[#2FBF71] border border-[#2FBF71]/30'
                           : prop.status === 'enviada'
-                          ? 'bg-[#1769FF]/15 text-[#8DBBFF] border border-[#3D8BFF]/30'
+                          ? 'bg-[#7C3AED]/15 text-[#A855F7] border border-[#7C3AED]/30'
                           : 'bg-[#18181B] text-[#8B8B95] border border-[#26262B]'
                       }`}
                     >
@@ -228,7 +228,7 @@ export const PropostasPage: React.FC = () => {
                     </span>
                   </div>
 
-                  <p className="text-xs text-[#3D8BFF] font-semibold mb-1">{prop.service}</p>
+                  <p className="text-xs text-[#A855F7] font-semibold mb-1">{prop.service}</p>
                   <p className="text-xs text-[#8B8B95] line-clamp-2">{prop.description}</p>
 
                   <div className="mt-4 pt-3 border-t border-[#26262B] flex items-center justify-between">
@@ -241,7 +241,7 @@ export const PropostasPage: React.FC = () => {
 
                 <div className="pt-2 flex flex-col gap-2 border-t border-[#26262B]">
                   <a
-                    href={waRes.url}
+                    href={waRes.url || undefined}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="w-full py-2.5 px-3 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-black font-bold transition-all text-xs flex items-center justify-center gap-2 shadow-sm"
@@ -298,7 +298,7 @@ export const PropostasPage: React.FC = () => {
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
               placeholder="Ex: Barbearia Silva"
-              className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+              className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#7C3AED]"
             />
           </div>
 
@@ -310,7 +310,7 @@ export const PropostasPage: React.FC = () => {
                 value={contactName}
                 onChange={(e) => setContactName(e.target.value)}
                 placeholder="Ex: Carlos Silva"
-                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#7C3AED]"
               />
             </div>
 
@@ -321,7 +321,7 @@ export const PropostasPage: React.FC = () => {
                 value={contactPhone}
                 onChange={(e) => setContactPhone(e.target.value)}
                 placeholder="Ex: (11) 98765-4321"
-                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#7C3AED]"
               />
             </div>
           </div>
@@ -334,7 +334,7 @@ export const PropostasPage: React.FC = () => {
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 placeholder="Ex: Barbearia"
-                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#7C3AED]"
               />
             </div>
 
@@ -345,7 +345,7 @@ export const PropostasPage: React.FC = () => {
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
                 placeholder="Ex: São Paulo / SP"
-                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#7C3AED]"
               />
             </div>
           </div>
@@ -357,7 +357,7 @@ export const PropostasPage: React.FC = () => {
               type="text"
               value={service}
               onChange={(e) => setService(e.target.value)}
-              className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+              className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#7C3AED]"
             />
           </div>
 
@@ -368,7 +368,7 @@ export const PropostasPage: React.FC = () => {
                 type="number"
                 value={price}
                 onChange={(e) => setPrice(Number(e.target.value))}
-                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#7C3AED]"
               />
             </div>
 
@@ -378,7 +378,7 @@ export const PropostasPage: React.FC = () => {
                 type="number"
                 value={deliveryDays}
                 onChange={(e) => setDeliveryDays(Number(e.target.value))}
-                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#7C3AED]"
               />
             </div>
           </div>
@@ -411,7 +411,7 @@ export const PropostasPage: React.FC = () => {
                 <button
                   onClick={() => setTheme('dark')}
                   className={`px-3 py-1 rounded-lg text-xs font-semibold ${
-                    theme === 'dark' ? 'bg-[#1769FF] text-white' : 'bg-[#18181B] text-[#8B8B95]'
+                    theme === 'dark' ? 'bg-[#7C3AED] text-white' : 'bg-[#18181B] text-[#8B8B95]'
                   }`}
                 >
                   Escuro (RIDE.IA)
@@ -442,7 +442,7 @@ export const PropostasPage: React.FC = () => {
                     Para: {selectedProposal.companyName}
                   </p>
                 </div>
-                <span className="text-xs font-semibold text-[#3D8BFF]">Feito com RIDE.IA</span>
+                <span className="text-xs font-semibold text-[#A855F7]">Feito com RIDE.IA</span>
               </div>
 
               <div className="space-y-6 text-xs leading-relaxed">
@@ -462,7 +462,7 @@ export const PropostasPage: React.FC = () => {
 
                 <div>
                   <h3 className="font-sora text-sm font-bold mb-2">3. Investimento e Prazos</h3>
-                  <p className="font-sora text-xl font-bold text-[#3D8BFF] my-1">
+                  <p className="font-sora text-xl font-bold text-[#A855F7] my-1">
                     {formatBRL(selectedProposal.price)}
                   </p>
                   <p>Prazo estimado: {selectedProposal.deliveryDays} dias úteis</p>
@@ -484,7 +484,7 @@ export const PropostasPage: React.FC = () => {
                   const waRes = buildWhatsAppUrl(selectedProposal.contactPhone || '', msgText);
                   return (
                     <a
-                      href={waRes.url}
+                      href={waRes.url || undefined}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-4 py-2 rounded-xl bg-[#25D366] hover:bg-[#20bd5a] text-black font-bold transition-all text-xs flex items-center gap-2 shadow-sm"

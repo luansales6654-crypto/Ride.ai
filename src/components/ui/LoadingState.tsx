@@ -19,8 +19,8 @@ export const LoadingState: React.FC<LoadingStateProps> = ({
   };
 
   return (
-    <div className={`flex flex-col items-center justify-center p-8 text-center text-[#8DBBFF] ${className}`}>
-      <Loader2 className={`${iconSizes[size]} animate-spin text-[#3D8BFF] mb-3`} />
+    <div className={`flex flex-col items-center justify-center p-8 text-center text-[#A855F7] ${className}`}>
+      <Loader2 className={`${iconSizes[size]} animate-spin text-[#A855F7] mb-3`} />
       <p className="text-sm font-medium text-[#C9C9CF] font-sora animate-pulse">{text}</p>
     </div>
   );

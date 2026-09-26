@@ -96,7 +96,7 @@ export const VendasPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="font-sora text-xl font-bold text-white flex items-center gap-2">
-            <DollarSign className="w-5 h-5 text-[#3D8BFF]" /> Gestão de Vendas (Fonte do Faturamento)
+            <DollarSign className="w-5 h-5 text-[#A855F7]" /> Gestão de Vendas (Fonte do Faturamento)
           </h2>
           <p className="text-xs text-[#8B8B95] mt-1">
             Registro unificado de faturamento de sites, e-commerce e vendas manuais
@@ -119,7 +119,7 @@ export const VendasPage: React.FC = () => {
           <select
             value={filterSource}
             onChange={(e) => setFilterSource(e.target.value)}
-            className="bg-[#18181B] border border-[#26262B] text-white text-xs rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+            className="bg-[#18181B] border border-[#26262B] text-white text-xs rounded-xl p-2.5 outline-none focus:border-[#7C3AED]"
           >
             <option value="all">Todas as Origens</option>
             <option value="site">Site / Serviço</option>
@@ -130,7 +130,7 @@ export const VendasPage: React.FC = () => {
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="bg-[#18181B] border border-[#26262B] text-white text-xs rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+            className="bg-[#18181B] border border-[#26262B] text-white text-xs rounded-xl p-2.5 outline-none focus:border-[#7C3AED]"
           >
             <option value="all">Todos os Status</option>
             <option value="confirmada">Confirmadas</option>

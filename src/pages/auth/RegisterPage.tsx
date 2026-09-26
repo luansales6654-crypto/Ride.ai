@@ -157,7 +157,7 @@ export const RegisterPage: React.FC = () => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Nome completo ou Agência Digital"
-                  className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 pl-9 outline-none focus:border-[#3D8BFF]"
+                  className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 pl-9 outline-none focus:border-[#7C3AED]"
                 />
               </div>
             </div>
@@ -172,7 +172,7 @@ export const RegisterPage: React.FC = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="seu@email.com"
-                  className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 pl-9 outline-none focus:border-[#3D8BFF]"
+                  className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 pl-9 outline-none focus:border-[#7C3AED]"
                 />
               </div>
             </div>
@@ -187,7 +187,7 @@ export const RegisterPage: React.FC = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 pl-9 outline-none focus:border-[#3D8BFF]"
+                  className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 pl-9 outline-none focus:border-[#7C3AED]"
                 />
               </div>
 
@@ -207,15 +207,15 @@ export const RegisterPage: React.FC = () => {
                 type="checkbox"
                 checked={termsAccepted}
                 onChange={(e) => setTermsAccepted(e.target.checked)}
-                className="mt-0.5 rounded border-[#26262B] bg-[#18181B] text-[#1769FF] focus:ring-0"
+                className="mt-0.5 rounded border-[#26262B] bg-[#18181B] text-[#7C3AED] focus:ring-0"
               />
               <span className="text-[11px] text-[#8B8B95] leading-snug">
                 Aceito os{' '}
-                <NavLink to="/termos" className="text-[#3D8BFF] underline" target="_blank">
+                <NavLink to="/termos" className="text-[#A855F7] underline" target="_blank">
                   Termos de Uso
                 </NavLink>{' '}
                 e a{' '}
-                <NavLink to="/privacidade" className="text-[#3D8BFF] underline" target="_blank">
+                <NavLink to="/privacidade" className="text-[#A855F7] underline" target="_blank">
                   Política de Privacidade
                 </NavLink>{' '}
                 da RIDE.IA.
@@ -230,7 +230,7 @@ export const RegisterPage: React.FC = () => {
 
           <p className="text-center text-xs text-[#8B8B95] mt-6">
             Já possui uma conta?{' '}
-            <NavLink to="/entrar" className="text-[#3D8BFF] font-semibold hover:underline">
+            <NavLink to="/entrar" className="text-[#A855F7] font-semibold hover:underline">
               Entrar agora
             </NavLink>
           </p>

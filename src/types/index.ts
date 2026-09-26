@@ -69,6 +69,7 @@ export interface Lead {
   category: string;
   city: string;
   state: string;
+  address?: string;
   phone?: string;
   isPossibleWhatsapp?: boolean;
   website?: string;
@@ -79,6 +80,8 @@ export interface Lead {
   estimatedValue?: number;
   followUpAt?: string | null;
   lossReason?: string;
+  notes?: string;
+  observacoes?: string;
   createdAt: string;
   updatedAt: string;
   companyData: CompanyPlace;

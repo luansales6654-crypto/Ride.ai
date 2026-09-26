@@ -6,7 +6,7 @@ export const AdminOperacaoPage: React.FC = () => {
     <div className="space-y-6">
       <div>
         <h2 className="font-sora text-xl font-bold text-white flex items-center gap-2">
-          <LifeBuoy className="w-5 h-5 text-[#3D8BFF]" /> Painel Admin 2 — Operação e Suporte
+          <LifeBuoy className="w-5 h-5 text-[#A855F7]" /> Painel Admin 2 — Operação e Suporte
         </h2>
         <p className="text-xs text-[#8B8B95] mt-1">
           Atendimento ao cliente, registro de notas internas e acompanhamento de chamados

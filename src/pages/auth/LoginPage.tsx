@@ -119,7 +119,7 @@ export const LoginPage: React.FC = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="seu@email.com"
-                  className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 pl-9 outline-none focus:border-[#3D8BFF]"
+                  className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 pl-9 outline-none focus:border-[#7C3AED]"
                 />
               </div>
             </div>
@@ -127,7 +127,7 @@ export const LoginPage: React.FC = () => {
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="text-[#C9C9CF] font-medium">Senha</label>
-                <NavLink to="/recuperar-senha" className="text-[#3D8BFF] hover:underline text-[11px]">
+                <NavLink to="/recuperar-senha" className="text-[#A855F7] hover:underline text-[11px]">
                   Esqueceu a senha?
                 </NavLink>
               </div>
@@ -138,7 +138,7 @@ export const LoginPage: React.FC = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 pl-9 outline-none focus:border-[#3D8BFF]"
+                  className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 pl-9 outline-none focus:border-[#7C3AED]"
                 />
               </div>
             </div>
@@ -160,7 +160,7 @@ export const LoginPage: React.FC = () => {
             <button
               onClick={handleGoogleLogin}
               disabled={loading}
-              className="btn-secondary w-full text-xs font-semibold flex items-center justify-center gap-2 border-[#26262B] hover:border-[#3D8BFF]/40 text-white"
+              className="btn-secondary w-full text-xs font-semibold flex items-center justify-center gap-2 border-[#26262B] hover:border-[#7C3AED]/40 text-white"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24">
                 <path
@@ -186,7 +186,7 @@ export const LoginPage: React.FC = () => {
             <button
               onClick={handleGuestLogin}
               disabled={loading}
-              className="w-full py-2.5 px-4 bg-[#18181B] hover:bg-[#26262B] border border-[#26262B] text-xs font-semibold text-[#3D8BFF] rounded-xl flex items-center justify-center gap-2 transition-all"
+              className="w-full py-2.5 px-4 bg-[#18181B] hover:bg-[#26262B] border border-[#26262B] text-xs font-semibold text-[#A855F7] rounded-xl flex items-center justify-center gap-2 transition-all"
             >
               <Shield className="w-4 h-4" />
               Entrar em Sessão Privada (Convidado)
@@ -195,7 +195,7 @@ export const LoginPage: React.FC = () => {
 
           <p className="text-center text-xs text-[#8B8B95] pt-2">
             Não tem uma conta?{' '}
-            <NavLink to="/cadastro" className="text-[#3D8BFF] font-semibold hover:underline">
+            <NavLink to="/cadastro" className="text-[#A855F7] font-semibold hover:underline">
               Cadastre-se grátis
             </NavLink>
           </p>

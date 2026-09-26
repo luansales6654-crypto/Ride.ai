@@ -152,8 +152,8 @@ export const Dashboard: React.FC = () => {
               onClick={() => setSelectedPeriod(card.id as any)}
               className={`card-surface p-5 rounded-2xl cursor-pointer transition-all border ${
                 isSelected
-                  ? 'border-[#3D8BFF] bg-[#0A1F4D]/20 shadow-[0_0_20px_rgba(23,105,255,0.25)]'
-                  : 'border-[#26262B] hover:border-[#3D8BFF]/40'
+                  ? 'border-[#7C3AED] bg-[#4C1D95]/20 shadow-[0_0_20px_rgba(124,58,237,0.25)]'
+                  : 'border-[#26262B] hover:border-[#7C3AED]/40'
               }`}
             >
               <span className="text-[10px] font-bold text-[#8B8B95] tracking-wider uppercase block mb-1">
@@ -165,7 +165,7 @@ export const Dashboard: React.FC = () => {
                 <span className="font-sora text-xl sm:text-2xl font-bold text-white tabular-nums">
                   {formatBRL(totalRevenue)}
                 </span>
-                <span className="text-xs font-semibold text-[#3D8BFF]">
+                <span className="text-xs font-semibold text-[#A855F7]">
                   {confirmedSales.length} {confirmedSales.length === 1 ? 'venda' : 'vendas'}
                 </span>
               </div>
@@ -193,7 +193,7 @@ export const Dashboard: React.FC = () => {
         </div>
         <div className="card-surface p-4 rounded-xl border border-[#26262B]">
           <span className="text-[10px] text-[#8B8B95] font-semibold block">Ticket Médio</span>
-          <p className="font-sora text-lg font-bold text-[#3D8BFF] mt-1 tabular-nums">
+          <p className="font-sora text-lg font-bold text-[#A855F7] mt-1 tabular-nums">
             {formatBRL(ticketMedio)}
           </p>
         </div>
@@ -208,14 +208,14 @@ export const Dashboard: React.FC = () => {
       {/* Counter metrics */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="bg-[#0A0A0B] p-4 rounded-xl border border-[#26262B] flex items-center gap-3">
-          <Users className="w-5 h-5 text-[#3D8BFF]" />
+          <Users className="w-5 h-5 text-[#A855F7]" />
           <div>
             <span className="text-[10px] text-[#8B8B95] block">Leads no CRM</span>
             <span className="font-sora text-base font-bold text-white">{leads.length}</span>
           </div>
         </div>
         <div className="bg-[#0A0A0B] p-4 rounded-xl border border-[#26262B] flex items-center gap-3">
-          <FileText className="w-5 h-5 text-[#3D8BFF]" />
+          <FileText className="w-5 h-5 text-[#A855F7]" />
           <div>
             <span className="text-[10px] text-[#8B8B95] block">Propostas Enviadas</span>
             <span className="font-sora text-base font-bold text-white">
@@ -224,14 +224,14 @@ export const Dashboard: React.FC = () => {
           </div>
         </div>
         <div className="bg-[#0A0A0B] p-4 rounded-xl border border-[#26262B] flex items-center gap-3">
-          <Grid className="w-5 h-5 text-[#3D8BFF]" />
+          <Grid className="w-5 h-5 text-[#A855F7]" />
           <div>
             <span className="text-[10px] text-[#8B8B95] block">Produtos</span>
             <span className="font-sora text-base font-bold text-white">{products.length}</span>
           </div>
         </div>
         <div className="bg-[#0A0A0B] p-4 rounded-xl border border-[#26262B] flex items-center gap-3">
-          <Layers className="w-5 h-5 text-[#3D8BFF]" />
+          <Layers className="w-5 h-5 text-[#A855F7]" />
           <div>
             <span className="text-[10px] text-[#8B8B95] block">Integrações Conectadas</span>
             <span className="font-sora text-base font-bold text-white">0</span>
@@ -245,7 +245,7 @@ export const Dashboard: React.FC = () => {
         <div className="card-surface p-6 rounded-2xl border border-[#26262B]">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <Clock className="w-5 h-5 text-[#3D8BFF]" />
+              <Clock className="w-5 h-5 text-[#A855F7]" />
               <h3 className="font-sora text-base font-bold text-white">Follow-ups de Hoje / Atrasados</h3>
             </div>
             <span className="text-xs text-[#8B8B95] font-semibold">{followUpLeads.length} pendentes</span>
@@ -274,7 +274,7 @@ export const Dashboard: React.FC = () => {
                     </div>
 
                     <a
-                      href={waRes.url}
+                      href={waRes.url || undefined}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn-primary h-8 px-3 text-[11px] font-semibold"
@@ -297,7 +297,7 @@ export const Dashboard: React.FC = () => {
               onClick={() => navigate('/app/prospeccao')}
               className="p-3.5 bg-[#18181B] hover:bg-[#26262B] border border-[#26262B] rounded-xl text-left text-xs font-medium text-white flex items-center gap-2.5 transition-all group"
             >
-              <Search className="w-4 h-4 text-[#3D8BFF] group-hover:scale-110 transition-transform" />
+              <Search className="w-4 h-4 text-[#A855F7] group-hover:scale-110 transition-transform" />
               <span>Buscar Empresas</span>
             </button>
 
@@ -305,7 +305,7 @@ export const Dashboard: React.FC = () => {
               onClick={() => navigate('/app/propostas')}
               className="p-3.5 bg-[#18181B] hover:bg-[#26262B] border border-[#26262B] rounded-xl text-left text-xs font-medium text-white flex items-center gap-2.5 transition-all group"
             >
-              <FileText className="w-4 h-4 text-[#3D8BFF] group-hover:scale-110 transition-transform" />
+              <FileText className="w-4 h-4 text-[#A855F7] group-hover:scale-110 transition-transform" />
               <span>Nova Proposta</span>
             </button>
 
@@ -313,7 +313,7 @@ export const Dashboard: React.FC = () => {
               onClick={() => navigate('/app/criador-de-sites')}
               className="p-3.5 bg-[#18181B] hover:bg-[#26262B] border border-[#26262B] rounded-xl text-left text-xs font-medium text-white flex items-center gap-2.5 transition-all group"
             >
-              <Wand2 className="w-4 h-4 text-[#3D8BFF] group-hover:scale-110 transition-transform" />
+              <Wand2 className="w-4 h-4 text-[#A855F7] group-hover:scale-110 transition-transform" />
               <span>Criar Site</span>
             </button>
 
@@ -321,7 +321,7 @@ export const Dashboard: React.FC = () => {
               onClick={() => navigate('/app/catalogo')}
               className="p-3.5 bg-[#18181B] hover:bg-[#26262B] border border-[#26262B] rounded-xl text-left text-xs font-medium text-white flex items-center gap-2.5 transition-all group"
             >
-              <Grid className="w-4 h-4 text-[#3D8BFF] group-hover:scale-110 transition-transform" />
+              <Grid className="w-4 h-4 text-[#A855F7] group-hover:scale-110 transition-transform" />
               <span>Abrir Catálogo</span>
             </button>
 
@@ -329,15 +329,15 @@ export const Dashboard: React.FC = () => {
               onClick={() => navigate('/app/integracoes')}
               className="p-3.5 bg-[#18181B] hover:bg-[#26262B] border border-[#26262B] rounded-xl text-left text-xs font-medium text-white flex items-center gap-2.5 transition-all group"
             >
-              <Layers className="w-4 h-4 text-[#3D8BFF] group-hover:scale-110 transition-transform" />
+              <Layers className="w-4 h-4 text-[#A855F7] group-hover:scale-110 transition-transform" />
               <span>Conectar Marketplace</span>
             </button>
 
             <button
               onClick={() => setRegisterModalOpen(true)}
-              className="p-3.5 bg-[#1769FF]/15 border border-[#3D8BFF]/40 rounded-xl text-left text-xs font-bold text-[#8DBBFF] flex items-center gap-2.5 transition-all group"
+              className="p-3.5 bg-[#7C3AED]/15 border border-[#7C3AED]/40 rounded-xl text-left text-xs font-bold text-[#A855F7] flex items-center gap-2.5 transition-all group"
             >
-              <DollarSign className="w-4 h-4 text-[#3D8BFF] group-hover:scale-110 transition-transform" />
+              <DollarSign className="w-4 h-4 text-[#A855F7] group-hover:scale-110 transition-transform" />
               <span>Registrar Venda</span>
             </button>
           </div>

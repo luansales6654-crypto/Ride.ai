@@ -24,7 +24,7 @@ export const ConfiguracoesPage: React.FC = () => {
   const [agencyName, setAgencyName] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
   const [showSignature, setShowSignature] = useState(true);
-  const [buttonColor, setButtonColor] = useState('#1769FF');
+  const [buttonColor, setButtonColor] = useState('#7C3AED');
   const [services, setServices] = useState<ServicePricing[]>([]);
   const [dashboardYMinAxis, setDashboardYMinAxis] = useState(500);
 
@@ -130,7 +130,7 @@ export const ConfiguracoesPage: React.FC = () => {
     <div className="space-y-6">
       <div>
         <h2 className="font-sora text-xl font-bold text-white flex items-center gap-2">
-          <Settings className="w-5 h-5 text-[#3D8BFF]" /> Configurações da Plataforma RIDE.IA
+          <Settings className="w-5 h-5 text-[#A855F7]" /> Configurações da Plataforma RIDE.IA
         </h2>
         <p className="text-xs text-[#8B8B95] mt-1">
           Ajuste perfil, cores dos botões, tabela de preços dos serviços, prospecção e faturamento
@@ -148,10 +148,11 @@ export const ConfiguracoesPage: React.FC = () => {
         ].map((tab) => (
           <button
             key={tab.id}
+            type="button"
             onClick={() => setActiveTab(tab.id as any)}
             className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all ${
               activeTab === tab.id
-                ? 'bg-[#1769FF] text-white shadow-[0_0_12px_rgba(23,105,255,0.3)]'
+                ? 'bg-[#7C3AED] text-white shadow-[0_0_12px_rgba(124,58,237,0.4)]'
                 : 'bg-[#111113] text-[#8B8B95] hover:text-white'
             }`}
           >
@@ -170,7 +171,7 @@ export const ConfiguracoesPage: React.FC = () => {
                 type="text"
                 value={agencyName}
                 onChange={(e) => setAgencyName(e.target.value)}
-                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#7C3AED]"
               />
             </div>
 
@@ -180,7 +181,7 @@ export const ConfiguracoesPage: React.FC = () => {
                 type="text"
                 value={whatsapp}
                 onChange={(e) => setWhatsapp(e.target.value)}
-                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#7C3AED]"
               />
             </div>
 
@@ -190,7 +191,7 @@ export const ConfiguracoesPage: React.FC = () => {
                   type="checkbox"
                   checked={showSignature}
                   onChange={(e) => setShowSignature(e.target.checked)}
-                  className="rounded border-[#26262B] bg-[#18181B] text-[#1769FF]"
+                  className="rounded border-[#26262B] bg-[#18181B] text-[#7C3AED]"
                 />
                 Exibir assinatura discreta "Feito com RIDE.IA" nas propostas
               </label>
@@ -203,7 +204,7 @@ export const ConfiguracoesPage: React.FC = () => {
           <div className="card-surface p-6 rounded-2xl border border-[#26262B] bg-[#0A0A0B] space-y-6 max-w-3xl text-xs">
             <div>
               <h3 className="font-sora text-sm font-bold text-white flex items-center gap-2">
-                <Palette className="w-4 h-4 text-[#3D8BFF]" /> Personalização da Cor dos Botões
+                <Palette className="w-4 h-4 text-[#A855F7]" /> Personalização da Cor dos Botões
               </h3>
               <p className="text-[11px] text-[#8B8B95] mt-1">
                 Escolha a cor principal dos botões e destaques da ferramenta RIDE.IA. As alterações são aplicadas instantaneamente em toda a plataforma.
@@ -261,8 +262,8 @@ export const ConfiguracoesPage: React.FC = () => {
                   type="text"
                   value={buttonColor}
                   onChange={(e) => handleColorChange(e.target.value)}
-                  placeholder="#1769FF"
-                  className="flex-1 bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none font-mono font-bold focus:border-[#3D8BFF]"
+                  placeholder="#7C3AED"
+                  className="flex-1 bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none font-mono font-bold focus:border-[#7C3AED]"
                 />
               </div>
             </div>
@@ -270,7 +271,7 @@ export const ConfiguracoesPage: React.FC = () => {
             {/* Live Interactive Preview Box */}
             <div className="pt-4 border-t border-[#26262B] space-y-3">
               <div className="flex items-center gap-2 text-white font-medium">
-                <Sparkles className="w-4 h-4 text-[#3D8BFF]" /> Visualização em Tempo Real na Ferramenta
+                <Sparkles className="w-4 h-4 text-[#A855F7]" /> Visualização em Tempo Real na Ferramenta
               </div>
               <div className="p-5 rounded-xl bg-[#18181B] border border-[#26262B] space-y-4">
                 <p className="text-[11px] text-[#8B8B95]">
@@ -382,7 +383,7 @@ export const ConfiguracoesPage: React.FC = () => {
                 type="number"
                 value={dashboardYMinAxis}
                 onChange={(e) => setDashboardYMinAxis(Number(e.target.value))}
-                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#7C3AED]"
               />
               <p className="text-[10px] text-[#8B8B95] mt-1">Padrão: R$ 500 (Garante que vendas pequenas não apareçam desproporcionais)</p>
             </div>

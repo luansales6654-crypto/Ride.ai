@@ -24,7 +24,7 @@ export const AutomacaoPage: React.FC = () => {
     <div className="space-y-6">
       <div>
         <h2 className="font-sora text-xl font-bold text-white flex items-center gap-2">
-          <Cpu className="w-5 h-5 text-[#3D8BFF]" /> Automações e Logs de Execução
+          <Cpu className="w-5 h-5 text-[#A855F7]" /> Automações e Logs de Execução
         </h2>
         <p className="text-xs text-[#8B8B95] mt-1">Rotinas periódicas em segundo plano da plataforma RIDE.IA</p>
       </div>
@@ -35,7 +35,7 @@ export const AutomacaoPage: React.FC = () => {
             <div>
               <h3 className="font-sora font-bold text-white text-sm">{job.name}</h3>
               <p className="text-[#8B8B95] mt-0.5">{job.desc}</p>
-              <span className="text-[10px] text-[#3D8BFF] font-semibold mt-1 inline-block">Frequência: {job.freq}</span>
+              <span className="text-[10px] text-[#A855F7] font-semibold mt-1 inline-block">Frequência: {job.freq}</span>
             </div>
 
             <button

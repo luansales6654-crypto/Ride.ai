@@ -50,6 +50,10 @@ export const ProspeccaoPage: React.FC = () => {
   const [selectedState, setSelectedState] = useState('SP');
   const [cities, setCities] = useState<IBGECity[]>([]);
   const [selectedCity, setSelectedCity] = useState('');
+  const [citySearchTerm, setCitySearchTerm] = useState('');
+  const [isCustomCityMode, setIsCustomCityMode] = useState(false);
+  const [loadingCities, setLoadingCities] = useState(false);
+
   const [neighborhood, setNeighborhood] = useState('');
   const [category, setCategory] = useState('Barbearias');
   const [customCategory, setCustomCategory] = useState('');
@@ -75,15 +79,51 @@ export const ProspeccaoPage: React.FC = () => {
   useEffect(() => {
     let isMounted = true;
     if (selectedState) {
+      setLoadingCities(true);
+      setCities([]);
+      setSelectedCity('');
+      setCitySearchTerm('');
+
       fetchCitiesByUF(selectedState).then((res) => {
         if (isMounted) {
           setCities(res);
-          if (res.length > 0) setSelectedCity(res[0].nome);
+          if (res.length > 0) {
+            setSelectedCity(res[0].nome);
+          }
+          setLoadingCities(false);
         }
+      }).catch(() => {
+        if (isMounted) setLoadingCities(false);
       });
     }
     return () => { isMounted = false; };
   }, [selectedState]);
+
+  // Filtered cities based on search term with deduplication
+  const filteredCities = React.useMemo(() => {
+    const seen = new Set<string>();
+    const term = citySearchTerm.trim().toLowerCase();
+    return cities.filter((c) => {
+      if (!c || !c.nome) return false;
+      const lower = c.nome.toLowerCase();
+      if (seen.has(lower)) return false;
+      seen.add(lower);
+      return term === '' || lower.includes(term);
+    });
+  }, [cities, citySearchTerm]);
+
+  // Keep selected city in sync with filtered list if search term changes
+  useEffect(() => {
+    if (filteredCities.length > 0) {
+      const exists = filteredCities.some(
+        (c) => c.nome.toLowerCase() === selectedCity.toLowerCase()
+      );
+      if (!exists && !isCustomCityMode) {
+        setSelectedCity(filteredCities[0].nome);
+      }
+    }
+  }, [filteredCities, selectedCity, isCustomCityMode]);
+
 
   // Load existing saved leads to prevent duplicates
   useEffect(() => {
@@ -237,7 +277,7 @@ export const ProspeccaoPage: React.FC = () => {
         <div className="flex items-center justify-between gap-3 mb-5 pb-4 border-b border-[#26262B]">
           <div>
             <h2 className="font-sora text-xl font-bold text-white flex items-center gap-2.5">
-              <Search className="w-6 h-6 text-[#3D8BFF]" />
+              <Search className="w-6 h-6 text-[#A855F7]" />
               Encontrar Leads Reais
             </h2>
             <p className="text-xs text-[#8B8B95] mt-1">
@@ -253,7 +293,7 @@ export const ProspeccaoPage: React.FC = () => {
             <select
               value={selectedState}
               onChange={(e) => setSelectedState(e.target.value)}
-              className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+              className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#7C3AED]"
             >
               {BRAZIL_STATES.map((st) => (
                 <option key={st.sigla} value={st.sigla}>
@@ -264,19 +304,58 @@ export const ProspeccaoPage: React.FC = () => {
           </div>
 
           {/* Cidade */}
-          <div>
-            <label className="block text-[#C9C9CF] font-medium mb-1">Cidade</label>
-            <select
-              value={selectedCity}
-              onChange={(e) => setSelectedCity(e.target.value)}
-              className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
-            >
-              {cities.map((ct) => (
-                <option key={ct.id} value={ct.nome}>
-                  {ct.nome}
-                </option>
-              ))}
-            </select>
+          <div className="space-y-1">
+            <div className="flex items-center justify-between">
+              <label className="block text-[#C9C9CF] font-medium">Cidade</label>
+              <button
+                type="button"
+                onClick={() => setIsCustomCityMode(!isCustomCityMode)}
+                className="text-[10px] text-[#A855F7] hover:underline"
+              >
+                {isCustomCityMode ? 'Selecionar da Lista' : 'Digitar Manual'}
+              </button>
+            </div>
+
+            {isCustomCityMode ? (
+              <input
+                type="text"
+                value={selectedCity}
+                onChange={(e) => setSelectedCity(e.target.value)}
+                placeholder="Digite o nome da cidade..."
+                className="w-full bg-[#18181B] border border-[#7C3AED] text-white rounded-xl p-2.5 outline-none"
+              />
+            ) : (
+              <div className="relative">
+                <select
+                  value={selectedCity}
+                  onChange={(e) => setSelectedCity(e.target.value)}
+                  disabled={loadingCities}
+                  className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#7C3AED] disabled:opacity-50"
+                >
+                  {loadingCities ? (
+                    <option value="">Carregando cidades de {selectedState}...</option>
+                  ) : filteredCities.length > 0 ? (
+                    filteredCities.map((ct) => (
+                      <option key={ct.id} value={ct.nome}>
+                        {ct.nome}
+                      </option>
+                    ))
+                  ) : (
+                    <option value="">Nenhuma cidade encontrada no filtro</option>
+                  )}
+                </select>
+
+                {cities.length > 15 && (
+                  <input
+                    type="text"
+                    value={citySearchTerm}
+                    onChange={(e) => setCitySearchTerm(e.target.value)}
+                    placeholder="🔍 Filtrar cidade..."
+                    className="w-full mt-1 bg-[#111113] border border-[#26262B] text-[11px] text-[#C9C9CF] rounded-lg p-1.5 outline-none focus:border-[#7C3AED]"
+                  />
+                )}
+              </div>
+            )}
           </div>
 
           {/* Bairro */}
@@ -287,7 +366,7 @@ export const ProspeccaoPage: React.FC = () => {
               value={neighborhood}
               onChange={(e) => setNeighborhood(e.target.value)}
               placeholder="Ex: Centro, Moema..."
-              className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+              className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#7C3AED]"
             />
           </div>
 
@@ -297,7 +376,7 @@ export const ProspeccaoPage: React.FC = () => {
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+              className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#7C3AED]"
             >
               {CATEGORIES.map((cat) => (
                 <option key={cat} value={cat}>
@@ -308,6 +387,7 @@ export const ProspeccaoPage: React.FC = () => {
             </select>
           </div>
 
+
           {/* Custom category if "Outro" selected */}
           {category === 'Outro' ? (
             <div>
@@ -317,7 +397,7 @@ export const ProspeccaoPage: React.FC = () => {
                 value={customCategory}
                 onChange={(e) => setCustomCategory(e.target.value)}
                 placeholder="Ex: Marmorarias, Lavanderias..."
-                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#7C3AED]"
               />
             </div>
           ) : (
@@ -328,7 +408,7 @@ export const ProspeccaoPage: React.FC = () => {
                 value={nameQuery}
                 onChange={(e) => setNameQuery(e.target.value)}
                 placeholder="Ex: Barbearia do Zé..."
-                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+                className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#7C3AED]"
               />
             </div>
           )}
@@ -339,7 +419,7 @@ export const ProspeccaoPage: React.FC = () => {
             <select
               value={pageSize}
               onChange={(e) => setPageSize(Number(e.target.value))}
-              className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#3D8BFF]"
+              className="w-full bg-[#18181B] border border-[#26262B] text-white rounded-xl p-2.5 outline-none focus:border-[#7C3AED]"
             >
               <option value={10}>10 empresas</option>
               <option value={20}>20 empresas</option>
@@ -436,7 +516,7 @@ export const ProspeccaoPage: React.FC = () => {
               return (
                 <div
                   key={place.placeId}
-                  className="card-surface p-5 rounded-2xl border border-[#26262B] flex flex-col justify-between hover:border-[#3D8BFF]/40 transition-all space-y-4 bg-[#0A0A0B]"
+                  className="card-surface p-5 rounded-2xl border border-[#26262B] flex flex-col justify-between hover:border-[#7C3AED]/40 transition-all space-y-4 bg-[#0A0A0B]"
                 >
                   <div className="space-y-2.5">
                     <div className="flex items-start justify-between gap-2">
@@ -447,13 +527,13 @@ export const ProspeccaoPage: React.FC = () => {
                           <CheckCircle className="w-3 h-3" /> Lead Salvo
                         </span>
                       ) : (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#3D8BFF]/10 text-[#8DBBFF] border border-[#3D8BFF]/30 shrink-0">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#7C3AED]/10 text-[#A855F7] border border-[#7C3AED]/30 shrink-0">
                           Novo Lead
                         </span>
                       )}
                     </div>
 
-                    <p className="text-xs text-[#3D8BFF] font-semibold flex items-center gap-1.5">
+                    <p className="text-xs text-[#A855F7] font-semibold flex items-center gap-1.5">
                       <Building2 className="w-3.5 h-3.5 shrink-0" />
                       {place.category}
                     </p>
@@ -464,8 +544,8 @@ export const ProspeccaoPage: React.FC = () => {
                     </p>
 
                     {place.website ? (
-                      <p className="text-xs text-[#8DBBFF] flex items-center gap-1.5 truncate">
-                        <Globe className="w-3.5 h-3.5 text-[#3D8BFF] shrink-0" />
+                      <p className="text-xs text-[#C084FC] flex items-center gap-1.5 truncate">
+                        <Globe className="w-3.5 h-3.5 text-[#A855F7] shrink-0" />
                         <a href={place.website} target="_blank" rel="noopener noreferrer" className="hover:underline truncate">
                           {place.website}
                         </a>
@@ -518,7 +598,7 @@ export const ProspeccaoPage: React.FC = () => {
 
                     <button
                       onClick={() => setSelectedPlace(place)}
-                      className="btn-ghost h-8 px-2 text-[11px] text-[#3D8BFF] font-semibold border border-[#26262B] hover:border-[#3D8BFF]/40"
+                      className="btn-ghost h-8 px-2 text-[11px] text-[#A855F7] font-semibold border border-[#26262B] hover:border-[#7C3AED]/40"
                     >
                       Ver detalhes
                     </button>
@@ -620,7 +700,7 @@ export const ProspeccaoPage: React.FC = () => {
 
               {(selectedPlace as any).latitude && (selectedPlace as any).longitude && (
                 <p className="text-white flex items-center gap-1.5">
-                  <Navigation className="w-3.5 h-3.5 text-[#3D8BFF]" />
+                  <Navigation className="w-3.5 h-3.5 text-[#A855F7]" />
                   <strong>Coordenadas:</strong> {(selectedPlace as any).latitude}, {(selectedPlace as any).longitude}
                 </p>
               )}
@@ -687,7 +767,7 @@ export const ProspeccaoPage: React.FC = () => {
                       onClick={() => setSelectedVariation(varKey)}
                       className={`px-3 py-1.5 rounded-lg font-semibold text-xs capitalize ${
                         selectedVariation === varKey
-                          ? 'bg-[#1769FF] text-white shadow-[0_0_12px_rgba(23,105,255,0.4)]'
+                          ? 'bg-[#7C3AED] text-white shadow-[0_0_12px_rgba(124,58,237,0.4)]'
                           : 'bg-[#18181B] text-[#8B8B95] hover:text-white'
                       }`}
                     >
@@ -703,7 +783,7 @@ export const ProspeccaoPage: React.FC = () => {
                 <div className="pt-2 flex justify-end gap-2">
                   {approachPlace.phone && (
                     <a
-                      href={buildWhatsAppUrl(approachPlace.phone, approachMessage[selectedVariation]).url}
+                      href={buildWhatsAppUrl(approachPlace.phone, approachMessage[selectedVariation]).url || undefined}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn-primary bg-[#2FBF71] hover:bg-[#28A762] text-white"

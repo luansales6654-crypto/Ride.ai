@@ -178,14 +178,21 @@ app.post('/api/places/search', async (req: Request, res: Response) => {
 
 // Gemini AI API setup
 const aiKey = process.env.GEMINI_API_KEY;
-const aiClient = aiKey ? new GoogleGenAI({ apiKey: aiKey }) : null;
+const aiClient = aiKey ? new GoogleGenAI({
+  apiKey: aiKey,
+  httpOptions: {
+    headers: {
+      'User-Agent': 'aistudio-build',
+    },
+  },
+}) : null;
 
 // AI Message Generator API
 app.post('/api/ai/message', async (req: Request, res: Response) => {
   if (!aiClient) {
     return res.status(200).json({
       ok: false,
-      error: { code: 'AI_NOT_CONFIGURED', message: 'GEMINI_API_KEY não configurada.', retryable: false },
+      error: { code: 'AI_NOT_CONFIGURED', message: 'GEMINI_API_KEY não configurada nas Secrets.', retryable: false },
     });
   }
 
@@ -235,9 +242,10 @@ Regras:
     const parsed = JSON.parse(text);
     res.json({ ok: true, data: parsed });
   } catch (error: any) {
+    console.error('[AI Message Error]:', error);
     res.status(200).json({
       ok: false,
-      error: { code: 'AI_ERROR', message: 'Não foi possível gerar a mensagem agora. Tente novamente.', retryable: true },
+      error: { code: 'AI_ERROR', message: `Não foi possível gerar a mensagem agora (${error.message || 'Erro desconhecido'}).`, retryable: true },
     });
   }
 });
@@ -247,7 +255,7 @@ app.post('/api/ai/proposal', async (req: Request, res: Response) => {
   if (!aiClient) {
     return res.status(200).json({
       ok: false,
-      error: { code: 'AI_NOT_CONFIGURED', message: 'GEMINI_API_KEY não configurada.', retryable: false },
+      error: { code: 'AI_NOT_CONFIGURED', message: 'GEMINI_API_KEY não configurada nas Secrets.', retryable: false },
     });
   }
 
@@ -285,9 +293,81 @@ Retorne um JSON estrito com o schema:
     const parsed = JSON.parse(response.text || '{}');
     res.json({ ok: true, data: parsed });
   } catch (error: any) {
+    console.error('[AI Proposal Error]:', error);
     res.status(200).json({
       ok: false,
-      error: { code: 'AI_ERROR', message: 'Não foi possível gerar a proposta agora.', retryable: true },
+      error: { code: 'AI_ERROR', message: `Não foi possível gerar a proposta agora (${error.message || 'Erro desconhecido'}).`, retryable: true },
+    });
+  }
+});
+
+// AI Proposal Message Generator API (5 Message Styles)
+app.post('/api/ai/proposal-message', async (req: Request, res: Response) => {
+  if (!aiClient) {
+    return res.status(200).json({
+      ok: false,
+      error: { code: 'AI_NOT_CONFIGURED', message: 'GEMINI_API_KEY não configurada nas Secrets.', retryable: false },
+    });
+  }
+
+  const {
+    companyName,
+    contactName,
+    category,
+    city,
+    service,
+    price,
+    deliveryDays,
+    publicUrl,
+    notes,
+  } = req.body;
+
+  const prompt = `
+Você é um especialista em vendas B2B e copywriting comercial no WhatsApp.
+Gere 5 variações de mensagem de abordagem inicial/envio de proposta para a empresa "${companyName}".
+
+DADOS DA EMPRESA E DA PROPOSTA:
+- Empresa: ${companyName}
+- Contato: ${contactName || companyName}
+- Categoria: ${category || 'Negócio Local'}
+- Cidade: ${city || 'Brasil'}
+- Serviço: ${service || 'Presença Digital e Site de Alta Conversão'}
+- Investimento: R$ ${price || 'A combinar'}
+- Prazo de entrega: ${deliveryDays || '5'} dias
+- Link da Proposta Comercial: ${publicUrl || 'link_da_proposta'}
+- Anotações adicionais: ${notes || 'Nenhuma'}
+
+GERE OBRIGATORIAMENTE 5 ESTILOS DE MENSAGEM:
+1) "direto": Abordagem sucinta, profissional e objetiva focado no benefício comercial e no link.
+2) "amigavel": Saudação amigável, tom natural e próximo, convidando sem pressão para olhar a proposta.
+3) "profissional": Tom formal de negócios, diagnóstico técnico e apresentação da solução.
+4) "curto": Mensagem extremamente curta para WhatsApp (1 a 3 frases no máximo).
+5) "personalizado": Mensagem altamente personalizada mencionando o segmento (${category}), a cidade (${city}), as anotações e os detalhes da proposta.
+
+Responda estritamente em formato JSON com o schema:
+{
+  "direto": "string",
+  "amigavel": "string",
+  "profissional": "string",
+  "curto": "string",
+  "personalizado": "string"
+}
+`;
+
+  try {
+    const response = await aiClient.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+      config: { responseMimeType: 'application/json' },
+    });
+
+    const parsed = JSON.parse(response.text || '{}');
+    res.json({ ok: true, data: parsed });
+  } catch (error: any) {
+    console.error('[AI Proposal Message Error]:', error);
+    res.status(200).json({
+      ok: false,
+      error: { code: 'AI_ERROR', message: error.message || 'Erro ao gerar estilos de mensagem.', retryable: true },
     });
   }
 });
@@ -297,7 +377,7 @@ app.post('/api/ai/site-prompt', async (req: Request, res: Response) => {
   if (!aiClient) {
     return res.status(200).json({
       ok: false,
-      error: { code: 'AI_NOT_CONFIGURED', message: 'GEMINI_API_KEY não configurada.', retryable: false },
+      error: { code: 'AI_NOT_CONFIGURED', message: 'GEMINI_API_KEY não configurada nas Secrets.', retryable: false },
     });
   }
 
@@ -341,7 +421,7 @@ FORMATO DE SAÍDA (Markdown com exatamente estas seções numeradas 1 a 15):
 
   try {
     const response = await aiClient.models.generateContent({
-      model: 'gemini-2.5-pro',
+      model: 'gemini-2.5-flash',
       contents: metaPrompt,
     });
 
@@ -353,33 +433,55 @@ Com base no briefing do site para "${briefing.companyName}", gere uma estrutura 
 Retorne um array de seções JSON no formato:
 [
   {
+    "id": "hero_1",
     "type": "hero",
-    "title": "Headline principal",
-    "subtitle": "Subtítulo de apoio",
-    "content": { "ctaText": "Falar no WhatsApp", "ctaUrl": "https://wa.me/..." },
+    "title": "Headline principal de alto impacto",
+    "subtitle": "Subtítulo engajador",
+    "ctaText": "Falar no WhatsApp",
+    "ctaUrl": "https://wa.me/55${(briefing.phone || '').replace(/\D/g, '')}",
     "isVisible": true,
     "order": 1
   },
   {
+    "id": "services_1",
     "type": "services",
-    "title": "Nossos Serviços",
-    "content": { "items": [{ "title": "Serviço 1", "desc": "Descrição" }] },
+    "title": "Nossos Serviços Especializados",
+    "subtitle": "Soluções completas para você",
+    "items": [
+      { "title": "Serviço Principal", "description": "Atendimento rápido e profissional para sua necessidade." },
+      { "title": "Diferencial Exclusivo", "description": "Qualidade garantida e condições especiais." }
+    ],
     "isVisible": true,
     "order": 2
   },
   {
-    "type": "faq",
-    "title": "Dúvidas Frequentes",
-    "content": { "items": [{ "question": "Pergunta?", "answer": "Resposta" }] },
+    "id": "about_1",
+    "type": "about",
+    "title": "Sobre a Empresa",
+    "content": "A ${briefing.companyName} atua com excelência em ${briefing.city || 'sua região'}, oferecendo serviços de ponta em ${briefing.category || 'sua área'}.",
     "isVisible": true,
     "order": 3
   },
   {
-    "type": "cta",
-    "title": "Garanta seu atendimento hoje",
-    "content": { "buttonText": "Solicitar Orçamento" },
+    "id": "faq_1",
+    "type": "faq",
+    "title": "Perguntas Frequentes",
+    "items": [
+      { "question": "Como funciona o agendamento/orçamento?", "answer": "Basta clicar no botão do WhatsApp para falar diretamente com nossa equipe." },
+      { "question": "Quais são as formas de pagamento?", "answer": "Aceitamos PIX, cartões de crédito e faturamento sob consulta." }
+    ],
     "isVisible": true,
     "order": 4
+  },
+  {
+    "id": "cta_1",
+    "type": "cta",
+    "title": "Agende seu Atendimento Hoje Mesmo",
+    "subtitle": "Atendimento rápido e personalizado via WhatsApp",
+    "ctaText": "Solicitar Orçamento",
+    "ctaUrl": "https://wa.me/55${(briefing.phone || '').replace(/\D/g, '')}",
+    "isVisible": true,
+    "order": 5
   }
 ]
 `;
@@ -400,12 +502,14 @@ Retorne um array de seções JSON no formato:
       },
     });
   } catch (error: any) {
+    console.error('[AI Site Prompt Error]:', error);
     res.status(200).json({
       ok: false,
-      error: { code: 'AI_ERROR', message: 'Falha ao gerar o Prompt Mestre.', retryable: true },
+      error: { code: 'AI_ERROR', message: `Falha ao gerar o Prompt Mestre (${error.message || 'Erro de conexão'}).`, retryable: true },
     });
   }
 });
+
 
 // Mercado Livre OAuth Mock / Real Adapter status endpoint
 app.get('/api/oauth/mercadolivre/auth-url', (req: Request, res: Response) => {
